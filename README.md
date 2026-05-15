@@ -1,6 +1,6 @@
 # Spike sorting information
 
-
+Add folders to your directory: *CurateIn*, *CurateOut*, *KiloOut*
 
 ## Step 1:Curate
 
