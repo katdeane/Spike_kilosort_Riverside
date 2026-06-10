@@ -17,7 +17,7 @@ Raw files from Allego need to be converted to Kilosort files through Curate with
 * Load .bin data 
 * Probe Layout: 
 
-<code> Open python terminal under KILOSORT environment in anaconda 
+<code> Open python terminal under KILOSORT environment in anaconda (ipython)
  from kilosort.io import save\_probe
  import numpy as np
  arr1 = np.array(\[17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32])
