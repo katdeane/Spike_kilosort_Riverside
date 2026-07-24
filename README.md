@@ -6,11 +6,14 @@ Raw data is stored from allego within subject folders (*yymmdd_SID##*). When add
 
 Raw files from Allego need to be converted to Kilosort files through Curate with the following steps:
 
-* source: allego\*\*\*\_data.xdat
+1. Open Curate.
+
+2. 
+* (batch)source: allego\*\*\*\_data.xdat
 * bandpass filter: 300 - 3000 Hz (2nd order)
-* sink: allego\*\*\*.kilosort2.json
+* (batch)sink: allego\*\*\*.kilosort2.json
 
-
+3. Run Protocol 
 
 ## Step 2: KiloSort
 
