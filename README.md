@@ -2,26 +2,43 @@
 
 Raw data is stored from allego within subject folders (*yymmdd_SID##*). When adding a subject to your \Data folder, create a folder of the same name for kilosort output (*yymmddSID##_kilo*). 
 
+**TO DO: figure out how to automatically implement the file-naming**
+
 ## Step 1:Curate
 
 Raw files from Allego need to be converted to Kilosort files through Curate with the following steps:
 
-1. Open Curate.
+- Open Curate.
 
-2. 
-* (batch)source: allego\*\*\*\_data.xdat
-* bandpass filter: 300 - 3000 Hz (2nd order)
-* (batch)sink: allego\*\*\*.kilosort2.json
+- Drag the following boxes into the workspace and connect them:
+  - (batch)source: allego\*\*\*\_data.xdat
+  - bandpass filter: 300 - 3000 Hz (2nd order)
+  - (batch)sink: allego\*\*\*.kilosort2.json
 
-3. Run Protocol 
+- Run Protocol
+
+You should put this output into the *yymmddSID##_kilo* folder
 
 ## Step 2: KiloSort
 
-* Load .bin data 
-* Probe Layout: 
+- Open Anaconda Navigator
+- Navigate to Environments tab and select 'kilosort' (assuming you've installed it, go to their documentation pages to do so)
+- Navigate to Home tab, launch Spyder
+- Open <code>BatchRunKilosort4.py</code>
 
-<code> Open python terminal under KILOSORT environment in anaconda (ipython)
- from kilosort.io import save\_probe
+Kilosort currently needs 3 things:
+1. .bin data
+   - curate output in *yymmddSID##_kilo* folder
+2. Probe layout
+   - A1x32-6mm-50-177 (see mapping below)
+3. Parameters
+   - currently default settings
+
+**The to do list is in the .py script**
+
+### To generate probe mapping:
+Open python terminal in 'kilosort' environment (type <code>ipython</code> in anaconda_prompt)  
+<code>from kilosort.io import save\_probe
  import numpy as np
  arr1 = np.array(\[17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32])
  arr2 = np.array(\[16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1])
@@ -40,24 +57,26 @@ Raw files from Allego need to be converted to Kilosort files through Curate with
     'n\_chan': n\_chan
   }
  print(probe)
- save\_probe(probe, 'C:/kilosort/probe.json') </code>
+ save\_probe(probe, 'C:/kilosort/probe.json')</code>
 
-* Parameters: 
-* Save out with a unique folder name for the subject
+## Step 3: Phy
+[Phy Documentation](https://phy.readthedocs.io/en/latest/)
+
+- Open anaconda_prompt in 'kilosort' environment
+- type <code>phy template-gui E:/Spike_kilosort_Riverside/Data/*yymmdd_SID##_kilo*/kilosort4/params.py</code> (kilosort folder name will hopefully become unique also)
+- Perform The Sort<sup>tm</sup>
+
+### Manual sorting rules:
+1. don't pick up the phone, you know he's only calling cause he's drunk and alone
+
+## Step 5: Matlab
+Data needed for Matlab:
+- spike timing (x)
+- spike location (y)
+- spike IDs
+- spike waveforms
+
+Generate parallel pipeline to CSD_Riverside, slap on identifying file names, stack trials, get graphics, do stats (probably in R).
 
 
-
-## Step 3
-
-Delete raw files, they are taking up *way* too much space
-
-
-
-## Step 4: Phy
-
-Manual sorting rules:
-
-## Step 5: Statistics
-
-How and where? How to add stimulus onset back in? Probably Matlab
 
