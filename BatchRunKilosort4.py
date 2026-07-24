@@ -10,8 +10,6 @@ Created on Sat May 16 15:40:00 2026
          - concatonate into list
          - loop
      - override default to generate folder with unique names for Phy sorting
-
-
 """
 
 import os
@@ -19,7 +17,7 @@ from kilosort import run_kilosort
 
 homedir=os.path.dirname("E:\Spike_kilosort_Riverside")
 
-filepath = "E:\\Spike_kilosort_Riverside\\CurateOut\\allego_7__uid0424-11-17-46.bin"
+filepath = "E:\\Spike_kilosort_Riverside\\Data\\240213_VMP06_kilo\\allego_3__uid0213-12-21-21_bulk.bin"
 
 settings = {'filename': filepath, 'n_chan_bin': 32}
 
@@ -28,5 +26,7 @@ ops, st, clu, tF, Wall, similar_templates, is_ref, est_contam_rate, kept_spikes 
         settings=settings, probe_name='probe.json',
         # save_preprocessed_copy=True
         )
+    
+    
     
     
