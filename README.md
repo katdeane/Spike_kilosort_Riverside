@@ -1,6 +1,6 @@
 # Spike sorting information
 
-Raw data is stored from allego within subject folders (\*yymmdd_SID##*). When adding a subject to your \Data folder, create a folder of the same name for kilosort output (\*yymmddSID##_kilo*). 
+Raw data is stored from allego within subject folders (*yymmdd_SID##*). When adding a subject to your \Data folder, create a folder of the same name for kilosort output (*yymmddSID##_kilo*). 
 
 ## Step 1:Curate
 
