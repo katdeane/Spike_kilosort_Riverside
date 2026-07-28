@@ -67,6 +67,7 @@ Open python terminal in 'kilosort' environment (type <code>ipython</code> in ana
 - Perform The Sort<sup>tm</sup>
 
 ### Manual sorting rules:
+[Video on Phy](https://www.youtube.com/watch?v=czdwIr-v5Yc)
 According to Nick Steinmetz:
 - clean refractory period
 - large amplitude
