@@ -67,7 +67,12 @@ Open python terminal in 'kilosort' environment (type <code>ipython</code> in ana
 - Perform The Sort<sup>tm</sup>
 
 ### Manual sorting rules:
-1. don't pick up the phone, you know he's only calling cause he's drunk and alone
+According to Nick Steinmetz:
+- clean refractory period
+- large amplitude
+- dissimilar waveform to anything else nearby
+- consistent waveform
+- spikes not lost below threshold
 
 ## Step 5: Matlab
 Data needed for Matlab:
