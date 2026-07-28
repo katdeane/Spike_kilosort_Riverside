@@ -17,7 +17,7 @@ from kilosort import run_kilosort
 
 homedir=os.path.dirname("E:\Spike_kilosort_Riverside")
 
-filepath = "E:\\Spike_kilosort_Riverside\\Data\\240213_VMP06_kilo\\allego_3__uid0213-12-21-21_bulk.bin"
+filepath = "E:\\Spike_kilosort_Riverside\\Data\\240213_VMP06_kilo\\allego_4__uid0213-12-30-28_bulk.bin"
 
 settings = {'filename': filepath, 'n_chan_bin': 32}
 
