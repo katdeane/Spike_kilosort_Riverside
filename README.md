@@ -20,6 +20,7 @@ Raw files from Allego need to be converted to Kilosort files through Curate with
 You should put this output into the *yymmddSID##_kilo* folder
 
 ## Step 2: KiloSort
+[Documentation](https://kilosort.readthedocs.io/en/latest/README.html)
 
 - Open Anaconda Navigator
 - Navigate to Environments tab and select 'kilosort' (assuming you've installed it, go to their documentation pages to do so)
