@@ -10,6 +10,10 @@ Created on Sat May 16 15:40:00 2026
          🗸 concatonate into list
          🗸 loop
      🗸 override default to generate folder with unique names for Phy sorting
+     - loop through subject folders if necessary  
+         - ask user if folder holds one subject's data or a subset of subject folders
+         - for the latter, wrap the current forloop in a larger one to loop through subject folders
+         - for the latter create a condition to skip broader loop and just perform the kilosort loop once
 """
 
 import os
