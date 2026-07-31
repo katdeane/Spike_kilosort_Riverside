@@ -38,8 +38,8 @@ Cond.NoiseBurst = {...
     {'02'},... %VMP03
     {'03'},... %VMP04
     {'02'},... %VMP05
-    {'04'},... %VMP06
-    {'03'},... %VMP08
+    {'04'},... %VMP06 allego_3__uid0213-12-21-21
+    {'03'},... %VMP08 
     };
 
 Cond.Pupcall30 = {... % 30 dB attenuation  = 45-50 dB SPL
@@ -47,7 +47,7 @@ Cond.Pupcall30 = {... % 30 dB attenuation  = 45-50 dB SPL
     {'06'},... %VMP03
     {'05'},... %VMP04
     {'03'},... %VMP05
-    {'05'},... %VMP06
+    {'05'},... %VMP06 allego_4__uid0213-12-30-28
     {'05'},... %VMP08
     };
 

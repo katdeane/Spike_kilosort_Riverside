@@ -14,7 +14,10 @@
 *.tsv
 *.log
 *.pkl
+*.asv
 
-/.phy
+\.phy
+\figures
+\output
 
 params.py
