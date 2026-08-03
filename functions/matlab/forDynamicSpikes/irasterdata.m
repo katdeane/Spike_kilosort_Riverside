@@ -1,4 +1,4 @@
-function [spikeMatrix] = irasterdata(timestamps,locations,kilochanpos,chanorder,keptspikes)
+function [spikeMatrix] = irasterdata(timestamps,locations,kilochanpos,chanorder)
 
 % sampling rate is currently 30000, we need to downsample to 3000
 timestamps = timestamps ./ 10;
@@ -6,13 +6,17 @@ timestamps = timestamps ./ 10;
 % location is in microns, keep as is
 % slap the times and locations together
 spikes = [timestamps,locations(:,2)];
-% filter out spikes not kept during sorting
-spikes = spikes(keptspikes,:);
+
 
 
 
 
 chandepths = kilochanpos(chanorder,2);
+
+
+
+
+
 
 
 

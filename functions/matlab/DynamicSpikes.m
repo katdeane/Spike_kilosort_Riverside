@@ -64,9 +64,22 @@ for iGro = 1:length(Group)
                     locations  = readNPY('spike_positions.npy'); % location of spike in microns
                     timestamps = readNPY('spike_times.npy'); % time of spike peak in fs=30k
                     kilochanpos= readNPY('channel_positions.npy'); % position of channels from kilosort
-                    spike_ID   = readNPY('spike_clusters.npy'); % 
-                    
-                    keyboard
+                    spike_ID   = readNPY('spike_clusters.npy'); %                     
+                    spikes = [spike_ID,timestamps,locations(:,2)];
+
+                    % set spikes to microseconds
+                    spikes(:,2,:) = spikes(:,2) ./10;
+
+                    % sort out channels/locations
+                    % which channels we took in during CSD:
+                    chandepths = kilochanpos(chanorder,2);
+                    % find the top and bottom
+                    depthstart = min(chandepths);
+                    depthend   = max(chandepths)-depthstart;
+                    % move the channel locations up 
+                    spikes(:)
+
+
                     % [timerange,stimIn] = FileReaderSpike(datafile);
 
                     % organize spikes into full length raster
