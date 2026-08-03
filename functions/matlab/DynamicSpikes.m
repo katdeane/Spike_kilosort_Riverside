@@ -17,7 +17,7 @@ for iGro = 1:length(Group)
     run([Group{iGro} '.m']); % brings animals channels Cond Condition Layer
     Indexer = imakeIndexer(Condition,animals,Cond); %#ok<*USENS>
 
-    for iSub = 1:length(animals)
+    for iSub = 5:length(animals)
 
         subname = animals{iSub};
         chanorder = str2num(channels{iSub});
@@ -51,29 +51,34 @@ for iGro = 1:length(Group)
                     L.VI = str2num(Layer.VI{iSub});
                     Layers = fieldnames(L);
 
-                    % labels - which neuron (not currently used)
-                    % ntvldxs - which channel (0 - 31 == 1 - 32)
-                    % timestamps - what time (s)
-                    % load([datafile '_s0.mat'],'ntvIdxs','timestamps')
+                    % navigate to kilo output
+                    cd(homedir);cd Data
+                    subfolders = dir;
+                    subfolders = {subfolders.name}';
+                    thisfolder = subfolders(contains(subfolders,[animals{iSub} '_kilo']));
+                    thisfolder = thisfolder{:};
+                    cd(thisfolder)
+                    cd(allegofile)
 
-                    % neuronexus data converter for matlab to get timing data
-                    % stimIn contains stimulus onset data at fs = 1000
-                    % files needed here are:
-                    % *_Spikes.xdat.json
-                    % *_Spikes_data.xdat (the big one)
-                    % *_Spikes_timestamp.xdat
-                    [timerange,stimIn] = FileReaderSpike(datafile);
+                    % load data in 
+                    locations  = readNPY('spike_positions.npy'); % location of spike in microns
+                    timestamps = readNPY('spike_times.npy'); % time of spike peak in fs=30k
+                    kilochanpos= readNPY('channel_positions.npy'); % position of channels from kilosort
+                    spike_ID   = readNPY('spike_clusters.npy'); % 
+                    
+                    keyboard
+                    % [timerange,stimIn] = FileReaderSpike(datafile);
 
                     % organize spikes into full length raster
-                    [spikeMatrix] = irasterdata(timerange,timestamps,ntvIdxs,chanorder);
+                    [spikeMatrix] = irasterdata(timestamps,locations,kilochanpos,chanorder);
 
                     BL      = 399;
                     % The next part depends on the stimulus; pull the
-                    % relevant variSubbles
+                    % relevant variables
                     [stimList, thisUnit, stimDur, stimITI, thisTag] = ...
                         StimVariable(Condition{iStimType},1,type);
 
-                    % now single triSubl stack it
+                    % now single trial stack it
                     if matches(thisTag ,'spont') || matches(thisTag,'single')
                         sngtrlSpikes = icutsingleraster(stimIn, spikeMatrix, BL, stimDur, stimITI, thisTag);
                     elseif matches(thisTag,'gapASSRRate') 
