@@ -37,7 +37,7 @@ for iGro = 1:length(Group)
 
                 %% Load the data from Videre/python and do things to it :D
                 allegofile  = AllegoLookup(animals{iSub},measurement);
-                datafile = [subname '_' measurement '_Spikes'];
+                datafile = [subname '_' measurement '_LFP'];
                 % skip empty measurements
                 if exist(allegofile,'file')
 
@@ -45,13 +45,18 @@ for iGro = 1:length(Group)
 
                     % Layers
                     L.II = str2num(Layer.II{iSub});
+                    L.II = (L.II .* 50) - 50; % convert to depth
                     L.IV = str2num(Layer.IV{iSub});
+                    L.IV = (L.IV .* 50) - 50;
                     L.Va = str2num(Layer.Va{iSub});
+                    L.Va = (L.Va .* 50) - 50;
                     L.Vb = str2num(Layer.Vb{iSub});
+                    L.Vb = (L.Vb .* 50) - 50;
                     L.VI = str2num(Layer.VI{iSub});
+                    L.VI = (L.VI .* 50) - 50;
                     Layers = fieldnames(L);
 
-                    % navigate to kilo output
+                    % navigate to kilo output %
                     cd(homedir);cd Data
                     subfolders = dir;
                     subfolders = {subfolders.name}';
@@ -60,27 +65,43 @@ for iGro = 1:length(Group)
                     cd(thisfolder)
                     cd(allegofile)
 
-                    % load data in 
-                    locations  = readNPY('spike_positions.npy'); % location of spike in microns
-                    timestamps = readNPY('spike_times.npy'); % time of spike peak in fs=30k
-                    kilochanpos= readNPY('channel_positions.npy'); % position of channels from kilosort
-                    spike_ID   = readNPY('spike_clusters.npy'); %                     
+                    % load data in %
+                    clear spikes
+                    locations  = double(readNPY('spike_positions.npy')); % location of spike in microns
+                    timestamps = double(readNPY('spike_times.npy')); % time of spike peak in fs=30k
+                    kilochanpos= double(readNPY('channel_positions.npy')); % position of channels from kilosort
+                    spike_ID   = double(readNPY('spike_clusters.npy')); %                     
                     spikes = [spike_ID,timestamps,locations(:,2)];
 
-                    % set spikes to microseconds
-                    spikes(:,2,:) = spikes(:,2) ./10;
+                    % set spikes to microseconds %
+                    spikes(:,2) = round((spikes(:,2)./10),2);
 
-                    % sort out channels/locations
+                    % sort out channels/locations %
                     % which channels we took in during CSD:
                     chandepths = kilochanpos(chanorder,2);
                     % find the top and bottom
                     depthstart = min(chandepths);
                     depthend   = max(chandepths)-depthstart;
-                    % move the channel locations up 
-                    spikes(:)
+                    % move the spike locations up to match depth from top
+                    % channel
+                    spikes(:,3) = spikes(:,3) - depthstart - 50; % note that highest channel is set to 50 and we want it at 0 at the top of the cortex
+                    spikes = spikes(spikes(:,3)>-25,:); % cut off locations above cortex (allow wiggle room)
+                    spikes = spikes(spikes(:,3)<(depthend+25),:); % cut off locations below lowest channel (allow wiggle room)
 
-
-                    % [timerange,stimIn] = FileReaderSpike(datafile);
+                    % add lfp data (fs=1000) just for stimulus channel
+                    stimIn = FileReaderStimChan(datafile);
+                    
+                    % TO DO: 
+                        % repurpose the icutraster functions below to cut
+                        % and stack the trials as well as generate a raster
+                        % plot per subject. Probably won't use spikeMatrix
+                        % but rather use the spikes variable as input
+                        keyboard
+                    
+                    
+                    
+                    
+                    %% EVERYTHING BELOW IS LEGACY CODE, NOT CURRENTLY WORKING
 
                     % organize spikes into full length raster
                     [spikeMatrix] = irasterdata(timestamps,locations,kilochanpos,chanorder);
