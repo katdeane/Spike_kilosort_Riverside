@@ -27,5 +27,5 @@ Condition = {'NoiseBurst'};
 % Condition = {'NoiseBurst' 'ShortCall' 'Spontaneous' 'MaskCall'  ...
 %     'Tonotopy' 'ClickTrain' 'gapASSR' 'NoiseBurst2pt5Hz' 'PostNoiseBurst'}; 
 
-DynamicSpikes(homedir, Groups, Condition,'Anesthetized')
+DynamicSpikes(homedir, figfold, Groups, Condition,'Anesthetized')
 

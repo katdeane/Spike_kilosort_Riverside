@@ -2,6 +2,9 @@ function DataOut = icutrasters(file, stimIn, spikeMatrix, checkStimList, BL, sti
 % this function takes any type of data input and returns truncated epochs
 % sorted by stimulus
 
+% IMPORTANT: keep in mind that stimIn comes in at fs=1k and the data is fs=3k
+% to that end, all timestamps brought in will be multiplied by 3
+
 if ~exist('thistype','var')
     thistype = 'noise';  % 'stack' or 'single'
 end
@@ -22,11 +25,14 @@ end
 % this means if throwoutfirst == 1, the first onset is second stim
 crossover = diff(location);
 onsets = find(crossover == 1);
+onsets = onsets*3; % convert to fs 3k
 
 %% timing info
 
 % stim duration + ITI (ms)
 stimITI = stimdur+ITI; % ms
+stimITI = stimITI*3; % μs
+BL = BL*3; % μs
 
 %% stack or source the pseudorandom list
 

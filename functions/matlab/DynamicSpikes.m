@@ -1,4 +1,4 @@
-function DynamicSpikes(homedir, Group, Condition,type)
+function DynamicSpikes(homedir, figfold, Group, Condition,type)
 %% Reconstruct Spiking Data
 
 %datachecks
@@ -45,15 +45,15 @@ for iGro = 1:length(Group)
 
                     % Layers
                     L.II = str2num(Layer.II{iSub});
-                    L.II = (L.II .* 50) - 50; % convert to depth
+                    Ld.II = (L.II .* 50) - 50; % convert to depth
                     L.IV = str2num(Layer.IV{iSub});
-                    L.IV = (L.IV .* 50) - 50;
+                    Ld.IV = (L.IV .* 50) - 50;
                     L.Va = str2num(Layer.Va{iSub});
-                    L.Va = (L.Va .* 50) - 50;
+                    Ld.Va = (L.Va .* 50) - 50;
                     L.Vb = str2num(Layer.Vb{iSub});
-                    L.Vb = (L.Vb .* 50) - 50;
+                    Ld.Vb = (L.Vb .* 50) - 50;
                     L.VI = str2num(Layer.VI{iSub});
-                    L.VI = (L.VI .* 50) - 50;
+                    Ld.VI = (L.VI .* 50) - 50;
                     Layers = fieldnames(L);
 
                     % navigate to kilo output %
@@ -87,43 +87,36 @@ for iGro = 1:length(Group)
                     spikes(:,3) = spikes(:,3) - depthstart - 50; % note that highest channel is set to 50 and we want it at 0 at the top of the cortex
                     spikes = spikes(spikes(:,3)>-25,:); % cut off locations above cortex (allow wiggle room)
                     spikes = spikes(spikes(:,3)<(depthend+25),:); % cut off locations below lowest channel (allow wiggle room)
+                    % sanity check; plot all spikes in continuous data:
+                    % plot(spikes(:,2),spikes(:,3),'.')
 
                     % add lfp data (fs=1000) just for stimulus channel
                     stimIn = FileReaderStimChan(datafile);
                     
-                    % TO DO: 
-                        % repurpose the icutraster functions below to cut
-                        % and stack the trials as well as generate a raster
-                        % plot per subject. Probably won't use spikeMatrix
-                        % but rather use the spikes variable as input
-                        keyboard
-                    
-                    
-                    
-                    
-                    %% EVERYTHING BELOW IS LEGACY CODE, NOT CURRENTLY WORKING
-
                     % organize spikes into full length raster
-                    [spikeMatrix] = irasterdata(timestamps,locations,kilochanpos,chanorder);
-
-                    BL      = 399;
+                    [spikeMatrix] = irasterdata(spikes,Ld);
+                    
+                    % baseline is 400 ms
+                    BL      = 400;
                     % The next part depends on the stimulus; pull the
                     % relevant variables
                     [stimList, thisUnit, stimDur, stimITI, thisTag] = ...
                         StimVariable(Condition{iStimType},1,type);
 
-                    % now single trial stack it
+                    % now single trial stack it TO DO - update gap and
+                    % single rasters to new data type as is done with
+                    % icutrasters
                     if matches(thisTag ,'spont') || matches(thisTag,'single')
-                        sngtrlSpikes = icutsingleraster(stimIn, spikeMatrix, BL, stimDur, stimITI, thisTag);
+                        %sngtrlSpikes = icutsingleraster(stimIn, spikeMatrix, BL, stimDur, stimITI, thisTag);
                     elseif matches(thisTag,'gapASSRRate') 
-                        sngtrlSpikes = icutGAPrasters(datafile,stimIn, spikeMatrix, stimList, BL, stimDur, stimITI, thisTag);
+                        %sngtrlSpikes = icutGAPrasters(datafile,stimIn, spikeMatrix, stimList, BL, stimDur, stimITI, thisTag);
                     else
                         sngtrlSpikes = icutrasters(datafile,stimIn, spikeMatrix, stimList, BL, stimDur, stimITI, thisTag);
                     end
 
                     %% Plot it
 
-                    cd (homedir); cd figures;
+                    cd(figfold)
                     if exist(['Single_' Group{iGro}],'dir') == 0
                         mkdir(['Single_' Group{iGro}])
                     end
@@ -171,9 +164,9 @@ for iGro = 1:length(Group)
 
                         h = gcf;
                         if iLay == length(Layers)+1
-                            savefig(h,[subname '_' Condition{iStimType} '_PSTH_AllChan'],'compact')
+                            savefig(h,[subname '_' Condition{iStimType} '_PSTH_AllChan'])
                         else
-                            savefig(h,[subname '_' Condition{iStimType}  '_PSTH_Lay' Layers{iLay}],'compact')
+                            savefig(h,[subname '_' Condition{iStimType}  '_PSTH_Lay' Layers{iLay}])
                         end
                         close (h)
                     end
@@ -200,7 +193,7 @@ for iGro = 1:length(Group)
                     colorbar
 
                     h = gcf;
-                    savefig(h,[subname '_' Condition{iStimType} '_Heatmap' ],'compact')
+                    savefig(h,[subname '_' Condition{iStimType} '_Heatmap' ])
                     close (h)
 
                     %% Save and Quit
@@ -212,8 +205,8 @@ for iGro = 1:length(Group)
                     SpikeData(CondIDX).StimList      = stimList;
 
                     % spike data
-                    SpikeData(CondIDX).SortedSpikes  = sngtrlSpikes;
-                    SpikeData(CondIDX).ContSpikes    = spikeMatrix;
+                    SpikeData(CondIDX).SngtrlSpikes  = sngtrlSpikes;
+                    SpikeData(CondIDX).ContSpikes    = spikes;
                 end % check file exists
             end % stim count
         end % stim type

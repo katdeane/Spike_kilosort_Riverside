@@ -1,64 +1,32 @@
-function [spikeMatrix] = irasterdata(timestamps,locations,kilochanpos,chanorder)
+function [spikeMatrix] = irasterdata(spikes,L)
 
-% sampling rate is currently 30000, we need to downsample to 3000
-timestamps = timestamps ./ 10;
+% spikes is spike ID x timestamp (fs=3000) x depth on probe (microns)
+% L is layer structure where channels are set to corresponding depths
 
-% location is in microns, keep as is
-% slap the times and locations together
-spikes = [timestamps,locations(:,2)];
+channels = [L.II L.IV L.Va L.Vb L.VI];
+numchan = length(channels);
+lastspike = max(spikes(:,2));
 
-
-
-
-
-chandepths = kilochanpos(chanorder,2);
-
-
-
-
-
-
-
-
-
-
-% length of data and corresponding sampling points (fs = 3000)
-datams     = (timerange(2) - timerange(1)) * 1000; % ms
-datalength = round(datams); % 
-% sp_in_ms   = 1:0.33333333:datams;
-
-
-
-% now let's fix the channel Idxs and designate channel order
-ntvIdxs   = ntvIdxs + 1;
-
-% for raster, I think we can currently ignore the labels 
-
-%% Reorder 
-% Note: if we want it in nanoseconds instead, we can only work with a
-% channel at a time. It's too many data points 
+% sanity check: minutelength = (((lastspike/3)/1000)/60); anesthetized
+% noise should be around 7.5 minutes
 
 % build a container
-spikeMatrix = zeros(32,datalength); % fs = 3000
+spikeMatrix = zeros(numchan,round(lastspike)); % fs = 3000
 
-% fill the container
-for ispike = 1:length(ntvIdxs)
+% we're going to shoehorn the depths back into their corresponding channels
+% so as to keep the size of the container down to 32 rows instead of 1500
 
-    timeindex = round(timestamps(ispike));
-    if timeindex > datalength
-        timeindex = timeindex - 1;
-    end
-    % round the spike to its timepoint 3 sp/ms
-    % thisStamp = threeSPround(timestamps(ispike));
-    % find that time point index
-    % error = 0.1;
-    % timeindex = find(abs(thisStamp - sp_in_ms)<=error & ...
-    %     abs(thisStamp - sp_in_ms)<=error);
+% fill the container 1 spike at a time babyyyyy (is there a better way?...)
+for ispike = 1:size(spikes,1)    
 
+    % round to that 3k sampling in time
+    timeindex = round(spikes(ispike,2)); 
+    % round to nearest 50 micron in depth
+    loc = spikes(ispike,3);
+    div = 50;
+    depth = round(loc./div).*div;
+    chanindex = channels==depth; 
     % add 1 to the corresponding channel and timepoint in ms 
-    spikeMatrix(ntvIdxs(ispike),timeindex) = 1 + ...
-        spikeMatrix(ntvIdxs(ispike),timeindex); 
+    spikeMatrix(chanindex,timeindex) = 1 + ...
+        spikeMatrix(chanindex,timeindex); 
 end
-
-% correct order of channels
-spikeMatrix = spikeMatrix(chanorder,:);
