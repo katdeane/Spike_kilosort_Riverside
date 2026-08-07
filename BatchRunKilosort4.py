@@ -20,27 +20,26 @@ import os
 from os import listdir
 from os.path import isfile, join, isdir
 from kilosort import run_kilosort
-#from tkinter import Tk
-from tkinter.filedialog import askdirectory
-
-#Jimena's alternative approach insetad of tkinter since that seemed to be the problem somehow??  
-#from PyQt5.QtWidgets import QApplication, QFileDialog 
-#import sys
+from PyQt5.QtWidgets import QApplication, QFileDialog 
+import sys
 
 # set the operating directory 
-homedir=os.path.dirname("E:\\Spike_kilosort_Riverside")
-#homedir=os.path.dirname("C:\\Users\\jimen\\Documents\\Spike_kilosort_Riverside")
+if os.path.isdir("E:\\Spike_kilosort_Riverside"):
+    homedir="E:\\Spike_kilosort_Riverside\\Data"
+elif os.path.isdir("C:\\Users\\jimen\\Documents\\Spike_kilosort_Riverside"):
+    homedir="C:\\Users\\jimen\\Documents\\Spike_kilosort_Riverside||Data"
+else: print('add your working directory to the list')
 
-# select the folder with .bin data for sorting; everything inside will be processed
-path = askdirectory(title='Select Folder')
 
 #also Jimena's alternative selecting folder function
-#app = QApplication(sys.argv)
-#path = QFileDialog.getExistingDirectory(
-#    None,
-#    "Select folder"
-#)
+app = QApplication(sys.argv)
+path = QFileDialog.getExistingDirectory(
+    None,
+    "Select folder with bin data",
+    homedir,
+)
 
+# sanity check:
 #print(path)
 
 
