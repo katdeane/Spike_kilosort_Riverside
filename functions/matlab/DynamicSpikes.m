@@ -90,11 +90,17 @@ for iGro = 1:length(Group)
                     % sanity check; plot all spikes in continuous data:
                     % plot(spikes(:,2),spikes(:,3),'.')
 
+                    % split muas and single units into their own lists
+                    [muas,suss] = splitKSlabels(spikes);
+
+                    
                     % add lfp data (fs=1000) just for stimulus channel
                     stimIn = FileReaderStimChan(datafile);
                     
                     % organize spikes into full length raster
                     [spikeMatrix] = irasterdata(spikes,Ld);
+                    [muaMatrix]   = irasterdata(muas,Ld);
+                    [susMatrix]   = irasterdata(suss,Ld);
                     
                     % baseline is 400 ms
                     BL      = 400;
@@ -112,6 +118,8 @@ for iGro = 1:length(Group)
                         %sngtrlSpikes = icutGAPrasters(datafile,stimIn, spikeMatrix, stimList, BL, stimDur, stimITI, thisTag);
                     else
                         sngtrlSpikes = icutrasters(datafile,stimIn, spikeMatrix, stimList, BL, stimDur, stimITI, thisTag);
+                        sngtrlMUA    = icutrasters(datafile,stimIn, muaMatrix, stimList, BL, stimDur, stimITI, thisTag);
+                        sngtrlSUS    = icutrasters(datafile,stimIn, susMatrix, stimList, BL, stimDur, stimITI, thisTag);
                     end
 
                     %% Plot it
@@ -122,39 +130,73 @@ for iGro = 1:length(Group)
                     end
                     cd(['Single_' Group{iGro}])
 
-                    for iLay = 1:length(Layers)+1
+                    plotdata = {sngtrlSpikes sngtrlMUA sngtrlSUS}; plotlabel = {'All' 'MUA' 'SUS'};
+                   
+                    for iLabel = 1:length(plotlabel)
 
-                        PSTHfig = tiledlayout('flow');
-                        if iLay == length(Layers)+1
-                            title(PSTHfig,[subname ' ' Condition{iStimType} ' PSTH All Channels'])
-                        else
-                            title(PSTHfig,[subname ' ' Condition{iStimType} ' PSTH Layer ' Layers{iLay}])
-                        end
-                        xlabel(PSTHfig, 'time [ms]')
-                        ylabel(PSTHfig, 'spike count / spike rate [s]')
+                        thisdata = plotdata{iLabel}; % all units, muas, or single units
 
-                        for istim = 1:length(stimList)
+                        for iLay = 1:length(Layers)+1
 
-                            % figure of psth's for all and layers per stim
-                            trlsum   = sum(sngtrlSpikes{istim},3);
-
+                            PSTHfig = tiledlayout('flow');
                             if iLay == length(Layers)+1
-                                % raster summing all channels or layer channels
-                                layersum  = sum(trlsum,1);
+                                title(PSTHfig,[subname ' ' Condition{iStimType} ' PSTH All Channels ' plotlabel{iLabel} ' Spikes'])
                             else
-                                % raster summing all channels or layer channels
-                                layersum  = sum(trlsum(L.(Layers{iLay}),:),1);
+                                title(PSTHfig,[subname ' ' Condition{iStimType} ' PSTH Layer ' Layers{iLay} ' ' plotlabel{iLabel} ' Spikes'])
+                            end
+                            xlabel(PSTHfig, 'time [ms]')
+                            ylabel(PSTHfig, 'spike count / spike rate [s]')
+
+                            for istim = 1:length(stimList)
+
+                                % figure of psth's for all and layers per stim
+                                trlsum   = sum(thisdata{istim},3);
+
+                                if iLay == length(Layers)+1
+                                    % raster summing all channels or layer channels
+                                    layersum  = sum(trlsum,1);
+                                else
+                                    % raster summing all channels or layer channels
+                                    layersum  = sum(trlsum(L.(Layers{iLay}),:),1);
+                                end
+
+                                % get spiking rate per second
+                                spikerate = sum(layersum) / ((length(layersum))/1000);
+                                %adjust your raster by spiking rate
+                                adjlaysum = layersum ./ spikerate;
+
+                                % now add the tile
+                                nexttile
+                                bar(adjlaysum,30,'histc')
+                                title([num2str(stimList(istim)) thisUnit])
+                                xlim([0 length(layersum)])
+                                xticks(0:200:length(layersum))
+                                labellist = xticks;
+                                xticklabels(labellist)
+
                             end
 
-                            % get spiking rate per second
-                            spikerate = sum(layersum) / ((length(layersum))/1000);
-                            %adjust your raster by spiking rate
-                            adjlaysum = layersum ./ spikerate;
+                            h = gcf;
+                            if iLay == length(Layers)+1
+                                savefig(h,[subname '_' Condition{iStimType} '_' plotlabel{iLabel} '_PSTH_AllChan'])
+                            else
+                                savefig(h,[subname '_' Condition{iStimType} '_' plotlabel{iLabel} '_PSTH_Lay' Layers{iLay}])
+                            end
+                            close (h)
+                        end
 
-                            % now add the tile
+                        heatmapfig = tiledlayout('flow');
+                        title(heatmapfig,[subname ' ' Condition{iStimType} ' Noiseburst Heatmap ' plotlabel{iLabel} ' Spikes'])
+                        xlabel(heatmapfig, 'time [ms]')
+                        ylabel(heatmapfig, 'depth [channels]')
+
+                        for istim = 1:length(stimList)
                             nexttile
-                            bar(adjlaysum,30,'histc')
+
+                            imagesc((sum(thisdata{istim},3)*-1))
                             title([num2str(stimList(istim)) thisUnit])
+                            colormap('gray')
+
                             xlim([0 length(layersum)])
                             xticks(0:200:length(layersum))
                             labellist = xticks;
@@ -162,40 +204,13 @@ for iGro = 1:length(Group)
 
                         end
 
+                        colorbar
+
                         h = gcf;
-                        if iLay == length(Layers)+1
-                            savefig(h,[subname '_' Condition{iStimType} '_PSTH_AllChan'])
-                        else
-                            savefig(h,[subname '_' Condition{iStimType}  '_PSTH_Lay' Layers{iLay}])
-                        end
+                        savefig(h,[subname '_' Condition{iStimType} '_' plotlabel{iLabel} '_Heatmap' ])
                         close (h)
-                    end
-
-                    heatmapfig = tiledlayout('flow');
-                    title(heatmapfig,[subname ' ' Condition{iStimType} ' Noiseburst Heatmap'])
-                    xlabel(heatmapfig, 'time [ms]')
-                    ylabel(heatmapfig, 'depth [channels]')
-
-                    for istim = 1:length(stimList)
-                        nexttile
-
-                        imagesc((sum(sngtrlSpikes{istim},3)*-1))
-                        title([num2str(stimList(istim)) thisUnit])
-                        colormap('gray')
-
-                        xlim([0 length(layersum)])
-                        xticks(0:200:length(layersum))
-                        labellist = xticks;
-                        xticklabels(labellist)
 
                     end
-
-                    colorbar
-
-                    h = gcf;
-                    savefig(h,[subname '_' Condition{iStimType} '_Heatmap' ])
-                    close (h)
-
                     %% Save and Quit
                     % identifiers and basic info
                     SpikeData(CondIDX).measurement   = datafile;
@@ -205,8 +220,13 @@ for iGro = 1:length(Group)
                     SpikeData(CondIDX).StimList      = stimList;
 
                     % spike data
-                    SpikeData(CondIDX).SngtrlSpikes  = sngtrlSpikes;
-                    SpikeData(CondIDX).ContSpikes    = spikes;
+                    SpikeData(CondIDX).AllRaster  = sngtrlSpikes;
+                    SpikeData(CondIDX).AllList    = spikes;
+                    SpikeData(CondIDX).MUARaster  = sngtrlMUA;
+                    SpikeData(CondIDX).MUAList    = muas;
+                    SpikeData(CondIDX).SUSRaster  = sngtrlSUS;
+                    SpikeData(CondIDX).SUSList    = suss;
+
                 end % check file exists
             end % stim count
         end % stim type
