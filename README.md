@@ -65,7 +65,7 @@ Open python terminal in 'kilosort' environment (type <code>ipython</code> in ana
 (install in kilosort environment: <code>pip install phy --upgrade</code>)
 
 - Open anaconda_prompt in 'kilosort' environment
-- type <code>phy template-gui E:/Spike_kilosort_Riverside/Data/*yymmdd_SID##_kilo*/kilosort4/params.py</code> (kilosort folder name will hopefully become unique also)
+- type <code>phy template-gui E:/Spike_kilosort_Riverside/Data/*yymmdd_SID##_kilo*/*allego_#__uidmmdd-hh-mm-ss*/params.py</code> (kilosort folder name will hopefully become unique also)
 - Perform The Sort<sup>tm</sup>
 
 ### Manual sorting rules:
