@@ -61,7 +61,8 @@ Open python terminal in 'kilosort' environment (type <code>ipython</code> in ana
  save\_probe(probe, 'C:/kilosort/probe.json')</code>
 
 ## Step 3: Phy
-[Phy Documentation](https://phy.readthedocs.io/en/latest/)
+[Phy Documentation](https://phy.readthedocs.io/en/latest/)  
+(install in kilosort environment: <code>pip install phy --upgrade</code>)
 
 - Open anaconda_prompt in 'kilosort' environment
 - type <code>phy template-gui E:/Spike_kilosort_Riverside/Data/*yymmdd_SID##_kilo*/kilosort4/params.py</code> (kilosort folder name will hopefully become unique also)
