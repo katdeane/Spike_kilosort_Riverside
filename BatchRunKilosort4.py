@@ -27,7 +27,7 @@ import sys
 if os.path.isdir("E:\\Spike_kilosort_Riverside"):
     homedir="E:\\Spike_kilosort_Riverside\\Data"
 elif os.path.isdir("C:\\Users\\jimen\\Documents\\Spike_kilosort_Riverside"):
-    homedir="C:\\Users\\jimen\\Documents\\Spike_kilosort_Riverside||Data"
+    homedir="C:\\Users\\jimen\\Documents\\Spike_kilosort_Riverside\\Data"
 else: print('add your working directory to the list')
 
 
