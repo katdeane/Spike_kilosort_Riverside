@@ -45,15 +45,15 @@ for iGro = 1:length(Group)
 
                     % Layers
                     L.II = str2num(Layer.II{iSub});
-                    Ld.II = (L.II .* 50) - 50; % convert to depth
+                    Ld.II = ((L.II .* 50) - 50)*-1; % convert to depth
                     L.IV = str2num(Layer.IV{iSub});
-                    Ld.IV = (L.IV .* 50) - 50;
+                    Ld.IV = ((L.IV .* 50) - 50)*-1;
                     L.Va = str2num(Layer.Va{iSub});
-                    Ld.Va = (L.Va .* 50) - 50;
+                    Ld.Va = ((L.Va .* 50) - 50)*-1;
                     L.Vb = str2num(Layer.Vb{iSub});
-                    Ld.Vb = (L.Vb .* 50) - 50;
+                    Ld.Vb = ((L.Vb .* 50) - 50)*-1;
                     L.VI = str2num(Layer.VI{iSub});
-                    Ld.VI = (L.VI .* 50) - 50;
+                    Ld.VI = ((L.VI .* 50) - 50)*-1;
                     Layers = fieldnames(L);
 
                     % navigate to kilo output %
@@ -70,23 +70,25 @@ for iGro = 1:length(Group)
                     locations  = double(readNPY('spike_positions.npy')); % location of spike in microns
                     timestamps = double(readNPY('spike_times.npy')); % time of spike peak in fs=30k
                     kilochanpos= double(readNPY('channel_positions.npy')); % position of channels from kilosort
+                    map        = readNPY('channel_map.npy');
                     spike_ID   = double(readNPY('spike_clusters.npy')); %                     
                     spikes = [spike_ID,timestamps,locations(:,2)];
 
                     % set spikes to microseconds %
                     spikes(:,2) = round((spikes(:,2)./10),2);
 
-                    % sort out channels/locations %
+                    % sort out channels/locations % - note: channels are already
+                    % mapped correct to the actual depth
                     % which channels we took in during CSD:
-                    chandepths = kilochanpos(chanorder,2);
+                    chandepths = kilochanpos(find(map==chanorder(1)-1):find(map==chanorder(end)-1),2);
                     % find the top and bottom
-                    depthstart = min(chandepths);
-                    depthend   = max(chandepths)-depthstart;
+                    depthstart = max(chandepths);
+                    depthend   = min(chandepths)-depthstart;
                     % move the spike locations up to match depth from top
                     % channel
-                    spikes(:,3) = spikes(:,3) - depthstart - 50; % note that highest channel is set to 50 and we want it at 0 at the top of the cortex
-                    spikes = spikes(spikes(:,3)>-25,:); % cut off locations above cortex (allow wiggle room)
-                    spikes = spikes(spikes(:,3)<(depthend+25),:); % cut off locations below lowest channel (allow wiggle room)
+                    spikes(:,3) = spikes(:,3) - depthstart; % top of cortex = 0
+                    spikes = spikes(spikes(:,3)<25,:); % cut off locations above cortex (allow wiggle room)
+                    spikes = spikes(spikes(:,3)>(depthend-25),:); % cut off locations below lowest channel (allow wiggle room)
                     % sanity check; plot all spikes in continuous data:
                     % plot(spikes(:,2),spikes(:,3),'.')
 

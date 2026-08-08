@@ -16,16 +16,18 @@ arr1 = np.array([17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32])
 arr2 = np.array([16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1])
 interleaved_arr = np.stack((arr1, arr2), axis=-1).ravel() 
 
-# map channel positions, subtract 1 to match indexing?? 
-chanMap = interleaved_arr - 1 
+# map channel positions, subtract 1 to match indexing
+chanMap = interleaved_arr -1
 
 # structure channel coordinates 
 n_chan = 32
 # single shank, all x-coordinates = 0 
 xc = np.zeros(n_chan) 
 # descending from 1550µm down to 0µm - this is what it looks like on the neuronexus page?
-yc = np.arange(n_chan)[::-1] * 50 
-kcoords = np.ones(n_chan)
+# kd: it is true and then 0µm should start at the top, meaning 17 = 0
+yc = (np.arange(n_chan)[::-1] * 50) - 1550
+kcoords = np.zeros(n_chan)
+
 
 #mapping dictionary 
 probe = {
@@ -71,7 +73,7 @@ plt.title("Probe Map", fontsize=11, fontweight="bold", pad=15)
 plt.xlabel("X Coordinate (µm)")
 plt.ylabel("Y Coordinate (µm)")
 plt.xlim(-50, 50)  # Center the linear shank visually
-plt.ylim(0, max(yc) + 100)  # Start axis at 0µm to show distance from tip
+#plt.ylim(0, max(yc) + 100)  # Start axis at 0µm to show distance from tip
 plt.grid(True, linestyle="--", alpha=0.5, zorder=1)
 
 plt.tight_layout()
