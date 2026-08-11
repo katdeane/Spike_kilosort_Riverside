@@ -1,3 +1,7 @@
+% Pipeline - Awake California Mouse Fathers vs Virgins
+
+% notes about study
+
 %% Get started
 
 clear; clc;
@@ -22,20 +26,13 @@ if ~exist(figfold, 'dir')
 end
 
 % set consistently needed variables
-Groups = {'VMP' 'PMP'};  %'VMA' 'PMA' 
-% Condition = {'NoiseBurst'};
-Condition = {'NoiseBurst' 'Pupcall30' 'Spontaneous'  ...
-    'ClickTrain' 'gapASSR' 'Chirp' 'PostNoiseBurst'}; 
-
+Groups = {'VMA' 'PMA'};  %'VMA' 'PMA' 
+% Condition = {'NoiseBurst' 'ShortCall' 'Spontaneous'};
+Condition = {'NoiseBurst' 'ShortCall' 'Spontaneous' 'MaskCall'  ...
+    'Tonotopy' 'ClickTrain' 'gapASSR' 'NoiseBurst2pt5Hz' 'PostNoiseBurst'}; 
 
 %% Data generation per subject ⊂◉‿◉つ
 
 % per subject CSD Script
-DynamicSpikes(homedir, figfold, Groups, Condition,'Anesthetized')
+DynamicSpikes(homedir, figfold, Groups, Condition,'Awake')
 
-
-
-% % code snippet to eventually plot spike templates
-% % load the data container in with the templates 
-% unit1 = squeeze(templates(1,:,:));
-% thischan = find(max(rms(unit1,1))==rms(unit1,1));
