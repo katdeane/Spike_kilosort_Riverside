@@ -17,7 +17,7 @@ for iGro = 1:length(Group)
     run([Group{iGro} '.m']); % brings animals channels Cond Condition Layer
     Indexer = imakeIndexer(Condition,animals,Cond); %#ok<*USENS>
 
-    for iSub = 5:length(animals)
+    for iSub = 1:length(animals)
 
         subname = animals{iSub};
         chanorder = str2num(channels{iSub});
@@ -67,6 +67,7 @@ for iGro = 1:length(Group)
 
                     % load data in %
                     clear spikes
+                    templates  = double(readNPY('templates.npy')); % pull the kilo spike template data
                     locations  = double(readNPY('spike_positions.npy')); % location of spike in microns
                     timestamps = double(readNPY('spike_times.npy')); % time of spike peak in fs=30k
                     kilochanpos= double(readNPY('channel_positions.npy')); % position of channels from kilosort
@@ -115,9 +116,13 @@ for iGro = 1:length(Group)
                     % single rasters to new data type as is done with
                     % icutrasters
                     if matches(thisTag ,'spont') || matches(thisTag,'single')
-                        %sngtrlSpikes = icutsingleraster(stimIn, spikeMatrix, BL, stimDur, stimITI, thisTag);
+                        sngtrlSpikes = icutsingleraster(stimIn, spikeMatrix, BL, stimDur, stimITI, thisTag);
+                        sngtrlMUA    = icutsingleraster(stimIn, muaMatrix, BL, stimDur, stimITI, thisTag);
+                        sngtrlSUS    = icutsingleraster(stimIn, susMatrix, BL, stimDur, stimITI, thisTag);
                     elseif matches(thisTag,'gapASSRRate') 
-                        %sngtrlSpikes = icutGAPrasters(datafile,stimIn, spikeMatrix, stimList, BL, stimDur, stimITI, thisTag);
+                        sngtrlSpikes = icutGAPrasters(datafile,stimIn, spikeMatrix, stimList, BL, stimDur, stimITI, thisTag);
+                        sngtrlMUA    = icutGAPrasters(datafile,stimIn, muaMatrix, stimList, BL, stimDur, stimITI, thisTag);
+                        sngtrlSUS    = icutGAPrasters(datafile,stimIn, susMatrix, stimList, BL, stimDur, stimITI, thisTag);
                     else
                         sngtrlSpikes = icutrasters(datafile,stimIn, spikeMatrix, stimList, BL, stimDur, stimITI, thisTag);
                         sngtrlMUA    = icutrasters(datafile,stimIn, muaMatrix, stimList, BL, stimDur, stimITI, thisTag);
@@ -213,21 +218,23 @@ for iGro = 1:length(Group)
                         close (h)
 
                     end
+                    
                     %% Save and Quit
                     % identifiers and basic info
-                    SpikeData(CondIDX).measurement   = datafile;
-                    SpikeData(CondIDX).Condition     = [Condition{iStimType} '_' num2str(iStimCount)];
-                    SpikeData(CondIDX).BL            = BL;
-                    SpikeData(CondIDX).stimDur       = stimDur;
-                    SpikeData(CondIDX).StimList      = stimList;
+                    SpikeData(CondIDX).measurement = datafile;
+                    SpikeData(CondIDX).Condition   = [Condition{iStimType} '_' num2str(iStimCount)];
+                    SpikeData(CondIDX).BL          = BL;
+                    SpikeData(CondIDX).stimDur     = stimDur;
+                    SpikeData(CondIDX).StimList    = stimList;
 
                     % spike data
-                    SpikeData(CondIDX).AllRaster  = sngtrlSpikes;
-                    SpikeData(CondIDX).AllList    = spikes;
-                    SpikeData(CondIDX).MUARaster  = sngtrlMUA;
-                    SpikeData(CondIDX).MUAList    = muas;
-                    SpikeData(CondIDX).SUSRaster  = sngtrlSUS;
-                    SpikeData(CondIDX).SUSList    = suss;
+                    SpikeData(CondIDX).AllRaster   = sngtrlSpikes;
+                    SpikeData(CondIDX).AllList     = spikes;
+                    SpikeData(CondIDX).MUARaster   = sngtrlMUA;
+                    SpikeData(CondIDX).MUAList     = muas;
+                    SpikeData(CondIDX).SUSRaster   = sngtrlSUS;
+                    SpikeData(CondIDX).SUSList     = suss;
+                    SpikeData(CondIDX).Templates   = templates;
 
                 end % check file exists
             end % stim count

@@ -23,9 +23,15 @@ end
 
 % set consistently needed variables
 Groups = {'VMP' 'PMP'};  %'VMA' 'PMA' 
-Condition = {'NoiseBurst'};
-% Condition = {'NoiseBurst' 'ShortCall' 'Spontaneous' 'MaskCall'  ...
-%     'Tonotopy' 'ClickTrain' 'gapASSR' 'NoiseBurst2pt5Hz' 'PostNoiseBurst'}; 
+% Condition = {'NoiseBurst'};
+Condition = {'NoiseBurst' 'Pupcall30' 'Spontaneous'  ...
+    'ClickTrain' 'gapASSR' 'Chirp' 'PostNoiseBurst'}; 
 
 DynamicSpikes(homedir, figfold, Groups, Condition,'Anesthetized')
 
+
+
+% % code snippet to eventually plot spike templates
+% % load the data container in with the templates 
+% unit1 = squeeze(templates(1,:,:));
+% thischan = find(max(rms(unit1,1))==rms(unit1,1));

@@ -38,8 +38,22 @@ BL = BL*3; % μs
 
 if matches(thistype, 'Tonotopy') || matches(thistype, 'ClickRate') ...
         || matches(thistype, 'gapASSRRate')
-    % pre-psuedorandomized tone list for this subject
-    stimList = readmatrix([file(1:end-9) thistype '.txt'])';
+    % pre-psuedorandomized list for this whole group
+    if contains(file, 'VMA') || contains(file,'PMA') || contains(file,'CWH') ...
+        || contains(file,'CKH') || contains(file,'CWW') || contains(file,'CKO') ...
+        || contains(file,'AWT18') || contains(file,'AWT20') || contains(file,'AWT25')...
+        || contains(file,'AWT26') || contains(file,'AWT27') || contains(file,'AWT28')
+        stimList = readmatrix(['2025_' thistype '.txt'])'; % universal list
+    elseif contains(file,'BAT') 
+        if matches(thistype, 'Tonotopy')
+            stimList = readmatrix('tonotopy_BatNSR.txt');
+        else
+            stimList = readmatrix(['2025_' thistype '.txt']);
+        end
+    else
+        % pre-psuedorandomized tone list for this subject
+        stimList = readmatrix([file(1:6) thistype '.txt'])'; % per subject
+    end
     shortlist = unique(stimList(2:end)); 
     shortlist = shortlist(shortlist ~= 0);
 

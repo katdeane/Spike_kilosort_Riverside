@@ -21,6 +21,12 @@ for ispike = 1:size(spikes,1)
 
     % round to that 3k sampling in time
     timeindex = round(spikes(ispike,2)); 
+    % rounded time might be 0, which is not represented in our spike
+    % matrix. Therefore, we'll add 1 microsecond to the time just in this
+    % case (will be during BF so no big deal)
+    if timeindex == 0
+        timeindex = timeindex + 1;
+    end
     % round to nearest 50 micron in depth
     loc = spikes(ispike,3);
     div = 50;

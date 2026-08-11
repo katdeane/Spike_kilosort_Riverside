@@ -2,9 +2,8 @@ function DataOut = icutGAPrasters(file, stimIn, spikeMatrix, checkStimList, BL, 
 % this function takes any type of data input and returns truncated epochs
 % sorted by stimulus
 
-if ~exist('thistype','var')
-    thistype = 'noise';  % 'stack' or 'single'
-end
+% IMPORTANT: keep in mind that stimIn comes in at fs=1k and the data is fs=3k
+% to that end, all timestamps brought in will be multiplied by 3
 
 %% get the stimulus onsets
 
@@ -22,7 +21,7 @@ end
 % this means if throwoutfirst == 1, the first onset is second stim
 crossover = diff(location);
 onsets = find(crossover == 1);
-
+onsets = onsets*3; % convert to fs 3k
 
 % the first stim is marked by a down peak around 300 ms after onset. It's
 % very consistent but the resting channel value is variable. We have then a
@@ -60,35 +59,39 @@ end
 
 % stim duration + ITI (ms)
 stimITI = stimdur+ITI; % ms
+stimITI = stimITI*3; % μs
+BL = BL*3; % μs
 
 %% stack or source the pseudorandom list
-
-if matches(thistype, 'Tonotopy') || matches(thistype, 'ClickRate') ...
-        || matches(thistype, 'gapASSRRate')
+    
+% pre-psuedorandomized list for this whole group
+if contains(file, 'VMA') || contains(file,'PMA') || contains(file,'CWH') ...
+        || contains(file,'CKH') || contains(file,'CWW') || contains(file,'CKO') ...
+        || contains(file,'AWT18') || contains(file,'AWT20') || contains(file,'AWT25')...
+        || contains(file,'AWT26') || contains(file,'AWT27') || contains(file,'AWT28')
+    stimList = readmatrix(['2025_' thistype '.txt'])'; % universal list
+elseif contains(file,'BAT')
+    if matches(thistype, 'Tonotopy')
+        stimList = readmatrix('tonotopy_BatNSR.txt');
+    else
+        stimList = readmatrix(['2025_' thistype '.txt']);
+    end
+else
     % pre-psuedorandomized tone list for this subject
-    stimList = readmatrix([file(1:end-9) thistype '.txt'])';
-    shortlist = unique(stimList);
-    shortlist = shortlist(shortlist ~= 0);
-
-    % click list is of duration between clicks so 8.33 = 120 Hz
-    % we want 1 hz (1000) first:
-    if matches(thistype, 'ClickRate')
-        shortlist =  sort(shortlist,"descend");
-    end
-
-    % this should match or something is wrong
-    if length(shortlist) ~= length(checkStimList); error('stimlist doesnt match'); end
-
-elseif matches(thistype, 'noise') % noise bursts
-
-    stimList = zeros(1,length(checkStimList) * ...
-        (ceil((length(onsets)+1)/length(checkStimList))));
-    for iextend = 1:ceil((length(stimList)+1)/length(checkStimList))
-        stimList(8*iextend-7:8*iextend) = checkStimList;
-    end
-    shortlist = checkStimList;
-
+    stimList = readmatrix([file(1:6) thistype '.txt'])'; % per subject
 end
+shortlist = unique(stimList);
+shortlist = shortlist(shortlist ~= 0);
+
+% click list is of duration between clicks so 8.33 = 120 Hz
+% we want 1 hz (1000) first:
+if matches(thistype, 'ClickRate')
+    shortlist =  sort(shortlist,"descend");
+end
+
+% this should match or something is wrong
+if length(shortlist) ~= length(checkStimList); error('stimlist doesnt match'); end
+
 
 % this is an issue for gapASSR where I have to manually stop the stimuli
 % and I sometimes miss that it's finished until a few stim later. 
