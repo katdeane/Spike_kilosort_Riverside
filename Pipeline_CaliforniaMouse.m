@@ -7,8 +7,10 @@ if exist('E:\Spike_kilosort_Riverside','dir')
     cd('E:\Spike_kilosort_Riverside'); 
 elseif exist('F:\Spike_kilosort_Riverside','dir')
     cd('F:\Spike_kilosort_Riverside'); 
+elseif exist('C:\Users\jimen\Documents\Spike_kilosort_Riverside','dir')
+    cd('C:\Users\jimen\Documents\Spike_kilosort_Riverside');
 else
-    error('add your local repository as shown above')
+    print('add your working directory')
 end
 homedir = pwd;
 addpath(genpath(homedir));
