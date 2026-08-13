@@ -15,7 +15,6 @@ elseif exist('C:\Users\jimen\Documents\Spike_kilosort_Riverside','dir')
     cd('C:\Users\jimen\Documents\Spike_kilosort_Riverside');
 else 
     print('add your working directory')
-
 end
 homedir = pwd;
 addpath(genpath(homedir));
