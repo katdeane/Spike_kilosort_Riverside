@@ -99,6 +99,26 @@ ATab(73,:) = {'AKO12','06','allego_5__uid1025-13-52-06'};
 ATab(74,:) = {'AKO12','07','allego_6__uid1025-14-05-24'};
 ATab(75,:) = {'AKO12','08','allego_7__uid1025-14-12-18'};
 
+ATab(76,:) = {'VMA01','02','allego_2__uid0413-14-11-34'};
+ATab(77,:) = {'VMA01','03','allego_3__uid0413-14-15-30'};
+ATab(78,:) = {'VMA01','04','allego_5__uid0413-14-18-25'};
+ATab(79,:) = {'VMA01','05','allego_6__uid0413-14-24-59'};
+ATab(80,:) = {'VMA01','06','allego_7__uid0413-14-48-34'};
+ATab(81,:) = {'VMA01','07','allego_8__uid0413-14-54-48'};
+ATab(82,:) = {'VMA01','08','allego_9__uid0413-15-12-00'};
+ATab(83,:) = {'VMA01','09','allego_10__uid0413-15-24-52'};
+
+ATab(84,:) = {'VMA04','02','allego_25__uid0505-13-58-57'};
+ATab(85,:) = {'VMA04','03','allego_26__uid0505-14-04-01'};
+ATab(86,:) = {'VMA04','04','allego_27__uid0505-14-08-28'};
+ATab(87,:) = {'VMA04','05','allego_28__uid0505-14-12-23'};
+ATab(88,:) = {'VMA04','06','allego_29__uid0505-14-18-48'};
+ATab(89,:) = {'VMA04','07','allego_30__uid0505-14-25-06'};
+ATab(90,:) = {'VMA04','08','allego_31__uid0505-14-38-24'};
+ATab(91,:) = {'VMA04','09','allego_32__uid0505-15-02-15'};
+ATab(92,:) = {'VMA04','10','allego_33__uid0505-15-20-24'};
+
+
 save('AllegoTable','ATab') % make sure this overwrites the table in the 
                             % groups folder (you could do that
                             % automatically by bringing in the home
