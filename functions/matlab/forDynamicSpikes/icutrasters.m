@@ -66,6 +66,11 @@ if matches(thistype, 'Tonotopy') || matches(thistype, 'ClickRate') ...
     % this should match or something is wrong
     if length(shortlist) ~= length(checkStimList); error('stimlist doesnt match'); end
 
+elseif matches(thistype, 'Mask')
+
+    stimList = readmatrix('Masks4.txt')';
+    shortlist = unique(stimList(2:end)); % first row is unread
+
 elseif matches(thistype, 'noise') % noise bursts
 
     stimList = zeros(1,length(checkStimList) * ...
