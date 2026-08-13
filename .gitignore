@@ -20,4 +20,9 @@
 \figures
 \output
 
+
 params.py
+
+
+.ipynb_checkpoints/
+__pycache__
