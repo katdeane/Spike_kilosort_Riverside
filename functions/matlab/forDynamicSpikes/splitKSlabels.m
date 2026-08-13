@@ -15,11 +15,14 @@ muas = spikes(spikes(:,1)==muaIDs(1),:);
 for iU = 2:length(muaIDs)
     muas = vertcat(muas, spikes(spikes(:,1)==muaIDs(iU),:));
 end
-suss = spikes(spikes(:,1)==susIDs(1),:);
-for iU = 2:length(susIDs)
-    suss = vertcat(suss, spikes(spikes(:,1)==susIDs(iU),:));
+if ~isempty(susIDs)
+    suss = spikes(spikes(:,1)==susIDs(1),:);
+    for iU = 2:length(susIDs)
+        suss = vertcat(suss, spikes(spikes(:,1)==susIDs(iU),:));
+    end
+else
+    suss = [];
 end
-
 if length(suss) + length(muas) ~= length(spikes)
     disp('These lists do not match')
     keyboard

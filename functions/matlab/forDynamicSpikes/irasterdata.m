@@ -5,7 +5,11 @@ function [spikeMatrix] = irasterdata(spikes,L)
 
 channels = [L.II L.IV L.Va L.Vb L.VI];
 numchan = length(channels);
-lastspike = max(spikes(:,2));
+if isempty(spikes) || size(spikes,2) < 2
+    lastspike = 0;
+else
+    lastspike = max(spikes(:,2));
+end
 
 % sanity check: minutelength = (((lastspike/3)/1000)/60); anesthetized
 % noise should be around 7.5 minutes
