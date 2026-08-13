@@ -5,7 +5,7 @@ function fileout = AllegoLookup(subject,measurement)
 load('AllegoTable','ATab')
 
 % find where the conditions are met
-index = (matches(ATab.Subject,subject) & ...
+aindex = (matches(ATab.Subject,subject) & ...
     matches(ATab.Measurement,measurement));
 
-fileout = ATab.AllegoName(index);
+fileout = ATab.AllegoName(aindex);
