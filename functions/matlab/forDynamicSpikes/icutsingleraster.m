@@ -1,6 +1,6 @@
 function DataOut = icutsingleraster(stimIn, SpikeMatrix, BL, stimdur, ITI, thistype)
 
-%% timing info 
+%% timing info
 % IMPORTANT: keep in mind that stimIn comes in at fs=1k and the data is fs=3k
 % to that end, all timestamps brought in will be multiplied by 3
 
@@ -34,25 +34,29 @@ if matches(thistype, 'spont')
 
 elseif matches(thistype, 'single')
 
-    threshold = 0.9; %microvolts, constant input of at least 0.1 through analog channel from RZ6 to XDAC
-    location = threshold <= stimIn; % 1 is above, 0 is below
+    if isempty(SpikeMatrix) % for example, no single units detected - generate the correct size empty bucket
+        DataOut{1} = zeros(size(SpikeMatrix,1),stimITI+BL,0);
+    else
 
-    % detect when signal crosses ABOVE threshold
-    % this means if throwoutfirst == 1, the first onset is second stim
-    crossover = diff(location);
-    onsets = find(crossover == 1);
-    onsets = onsets*3; % convert to fs 3k
+        threshold = 0.9; %microvolts, constant input of at least 0.1 through analog channel from RZ6 to XDAC
+        location = threshold <= stimIn; % 1 is above, 0 is below
 
-    curData = NaN(size(SpikeMatrix,1), stimITI + BL + 1, length(onsets));
+        % detect when signal crosses ABOVE threshold
+        % this means if throwoutfirst == 1, the first onset is second stim
+        crossover = diff(location);
+        onsets = find(crossover == 1);
+        onsets = onsets*3; % convert to fs 3k
 
-    % now we can cut out the time points around onsets corresponding to
-    % specific dB
-    for iOn = 1:length(onsets)
-        % 400 ms = exact onset "1" 
-        curData(:,:,iOn) = SpikeMatrix(:,onsets(iOn)-BL:onsets(iOn)+stimITI);
+        curData = NaN(size(SpikeMatrix,1), stimITI + BL + 1, length(onsets));
 
+        % now we can cut out the time points around onsets corresponding to
+        % specific dB
+        for iOn = 1:length(onsets)
+            % 400 ms = exact onset "1"
+            curData(:,:,iOn) = SpikeMatrix(:,onsets(iOn)-BL:onsets(iOn)+stimITI);
+
+        end
+
+        DataOut{1} = curData;
     end
-
-    DataOut{1} = curData;
-
 end

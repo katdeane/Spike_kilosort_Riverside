@@ -95,7 +95,7 @@ Cond.Chirp = {...
     {'04'},... %AKO04 - {allego 27}
     {'06'},... %AKO05 - {allego 37}
     {'06'},... %AKO06 - {allego 45}
-    {'07'},... %AKO08 - {allego 14}
+    {[]},... %AKO08 - {allego 14} - '07' exists but is not currently run for my folder
     {'07'},... %AKO09 - {allego 22}
     {'11'},... %AKO10 - {allego 10}
     {'06'},... %AKO11 - {allego 17}
@@ -118,12 +118,12 @@ Cond.gapASSR = {...
 Cond.postNoiseBurst = {...
     {[]},... %AKO02
     {[]},... %AKO03
-    {'08'},... %AKO04 - {allego 31}
+    {[]},... %AKO04 - {allego 31} - '08' exists but is not currently run for my folder
     {'08'},... %AKO05 - {allego 39}
     {'10'},... %AKO06 - {allego 49}
     {'08'},... %AKO08 - {allego 15}
     {'09'},... %AKO09 - {allego 24}
     {'12'},... %AKO10 - {allego 11}
-    {'08'},... %AKO11 - {allego 19}
+    {[]},... %AKO11 - {allego 19} - '08' exists but is not currently run for my folder
     {'08'},... %AKO12 - {allego 7}
     };

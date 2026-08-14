@@ -36,8 +36,12 @@ for iGro = 1:length(Group)
                 measurement = Cond.(Condition{iStimType}){iSub}{iStimCount};
 
                 %% Load the data from Videre/python and do things to it :D
-                allegofile  = AllegoLookup(animals{iSub},measurement);
                 datafile = [subname '_' measurement '_LFP'];
+                if isempty(measurement)
+                    allegofile = 'not in group script';
+                else
+                    allegofile  = AllegoLookup(subname,measurement);
+                end
                 % skip empty measurements
                 if exist(allegofile,'file')
 
@@ -236,6 +240,8 @@ for iGro = 1:length(Group)
                     SpikeData(CondIDX).SUSList     = suss;
                     SpikeData(CondIDX).Templates   = templates;
 
+                else
+                    disp([subname ' ' Condition{iStimType} ' allego data missing: ' allegofile])
                 end % check file exists
             end % stim count
         end % stim type

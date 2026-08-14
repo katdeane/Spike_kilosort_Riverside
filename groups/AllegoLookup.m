@@ -8,4 +8,10 @@ load('AllegoTable','ATab')
 aindex = (matches(ATab.Subject,subject) & ...
     matches(ATab.Measurement,measurement));
 
-fileout = ATab.AllegoName(aindex);
+if sum(aindex)==1 
+    fileout = ATab.AllegoName(aindex);
+elseif sum(aindex)==0
+    fileout = 'not in allego lookup table';
+else
+    error('you have an issue here to solve')
+end

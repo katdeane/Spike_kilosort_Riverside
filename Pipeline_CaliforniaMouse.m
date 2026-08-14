@@ -32,7 +32,6 @@ Condition = {'NoiseBurst' 'Pupcall30' 'Spontaneous'  ...
 
 %% Data generation per subject ⊂◉‿◉つ
 
-% per subject CSD Script
 DynamicSpikes(homedir, figfold, Groups, Condition,'Anesthetized')
 
 
