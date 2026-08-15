@@ -4,7 +4,9 @@ layers = {'II' 'IV' 'Va' 'Vb' 'VI'};
 
 for iGro = 1:length(Groups)
 
-    spikeT = struct;
+    ALLt = struct;
+    MUAt = struct;
+    SUSt = struct;
     count  = 1; 
 
     run([Groups{iGro} '.m']) % brings in Layer channels animals Cond
@@ -37,7 +39,9 @@ for iGro = 1:length(Groups)
 
             for istim = 1:length(stimList)
 
-                groupsum    = zeros(1,timeaxis+1);
+                groupsumall    = zeros(1,timeaxis+1);
+                groupsummua    = zeros(1,timeaxis+1);
+                groupsumsus    = zeros(1,timeaxis+1);
                 numsubjects = length(animals);
 
                 for iSub = 1:length(animals)
@@ -51,52 +55,116 @@ for iGro = 1:length(Groups)
                         continue
                     end
                     % pull appropriate data
-                    thisdat = SpikeData(index).AllRaster{istim};
+                    alldat = SpikeData(index).AllRaster{istim};
+                    muadat = SpikeData(index).MUARaster{istim};
+                    susdat = SpikeData(index).SUSRaster{istim};
 
                     % get subject average spike data
-                    trlsum = sum(thisdat,3);
+                    trlsumall = sum(alldat,3);
+                    trlsummua = sum(muadat,3);
+                    trlsumsus = sum(susdat,3);
                     if iLay == length(layers)+1 % all channels
-                        thislay = 1:size(trlsum,1);
+                        thislay = 1:size(trlsumall,1);
                     else % layer channels
                         thislay = str2num(Layer.(layname){iSub});
                     end
-                    layersum  = sum(trlsum(thislay,:),1); 
+                    layersumall  = sum(trlsumall(thislay,:),1); 
+                    layersummua  = sum(trlsummua(thislay,:),1); 
+                    layersumsus  = sum(trlsumsus(thislay,:),1); 
                     % normalize by number of channels
-                    layersum  = layersum / length(thislay);
+                    layersumall  = layersumall / length(thislay);
+                    layersummua  = layersummua / length(thislay);
+                    layersumsus  = layersumsus / length(thislay);
 
                     % add to group sum for later averaging of group
-                    groupsum = groupsum + layersum;
+                    groupsumall = groupsumall + layersumall;
+                    groupsummua = groupsummua + layersummua;
+                    groupsumsus = groupsumsus + layersumsus;
 
                     % fill a struct for now (table later)
-                    spikeT(count).group      = Groups{iGro};
-                    spikeT(count).condition  = Condition{iCond};
-                    spikeT(count).layer      = layname;
-                    spikeT(count).stimulus   = stimList(istim);
-                    spikeT(count).subject    = animals{iSub};
+                    ALLt(count).group      = Groups{iGro};
+                    ALLt(count).condition  = Condition{iCond};
+                    ALLt(count).layer      = layname;
+                    ALLt(count).stimulus   = stimList(istim);
+                    ALLt(count).subject    = animals{iSub};
 
                     % now get some variables while we're here
                     % get spiking rate per second
-                    [spikeT(count).trlspikerate,spikeT(count).avgspikerate,...
-                        spikeT(count).trlspikecount, spikeT(count).avgspikecount,...
-                        spikeT(count).trlPREcount,spikeT(count).trlONSETcount,...
-                        spikeT(count).trlPOSTcount,spikeT(count).avgPREcount,...
-                        spikeT(count).avgONSETcount,spikeT(count).avgPOSTcount,...
-                        spikeT(count).Fanofactor,spikeT(count).FanoPRE,...
-                        spikeT(count).FanoONSET,spikeT(count).FanoPOST] = ...
-                        spikeDetection(thisdat(thislay,:,:),Condition{iCond});
+                    [ALLt(count).trlspikerate,ALLt(count).avgspikerate,...
+                        ALLt(count).trlspikecount, ALLt(count).avgspikecount,...
+                        ALLt(count).trlPREcount,ALLt(count).trlONSETcount,...
+                        ALLt(count).trlPOSTcount,ALLt(count).avgPREcount,...
+                        ALLt(count).avgONSETcount,ALLt(count).avgPOSTcount,...
+                        ALLt(count).Fanofactor,ALLt(count).FanoPRE,...
+                        ALLt(count).FanoONSET,ALLt(count).FanoPOST] = ...
+                        spikeDetection(alldat(thislay,:,:),Condition{iCond});
+
+                    % fill a struct for now (table later)
+                    MUAt(count).group      = Groups{iGro};
+                    MUAt(count).condition  = Condition{iCond};
+                    MUAt(count).layer      = layname;
+                    MUAt(count).stimulus   = stimList(istim);
+                    MUAt(count).subject    = animals{iSub};
+
+                    % now get some variables while we're here
+                    % get spiking rate per second
+                    [MUAt(count).trlspikerate,MUAt(count).avgspikerate,...
+                        MUAt(count).trlspikecount, MUAt(count).avgspikecount,...
+                        MUAt(count).trlPREcount,MUAt(count).trlONSETcount,...
+                        MUAt(count).trlPOSTcount,MUAt(count).avgPREcount,...
+                        MUAt(count).avgONSETcount,MUAt(count).avgPOSTcount,...
+                        MUAt(count).Fanofactor,MUAt(count).FanoPRE,...
+                        MUAt(count).FanoONSET,MUAt(count).FanoPOST] = ...
+                        spikeDetection(muadat(thislay,:,:),Condition{iCond});
+
+                    % fill a struct for now (table later)
+                    SUSt(count).group      = Groups{iGro};
+                    SUSt(count).condition  = Condition{iCond};
+                    SUSt(count).layer      = layname;
+                    SUSt(count).stimulus   = stimList(istim);
+                    SUSt(count).subject    = animals{iSub};
+
+                    % now get some variables while we're here
+                    % get spiking rate per second
+                    [SUSt(count).trlspikerate,SUSt(count).avgspikerate,...
+                        SUSt(count).trlspikecount, SUSt(count).avgspikecount,...
+                        SUSt(count).trlPREcount,SUSt(count).trlONSETcount,...
+                        SUSt(count).trlPOSTcount,SUSt(count).avgPREcount,...
+                        SUSt(count).avgONSETcount,SUSt(count).avgPOSTcount,...
+                        SUSt(count).Fanofactor,SUSt(count).FanoPRE,...
+                        SUSt(count).FanoONSET,SUSt(count).FanoPOST] = ...
+                        spikeDetection(susdat(thislay,:,:),Condition{iCond});
                     count = count + 1;
                 end % subject
 
-                groupsum = groupsum ./ numsubjects;
+                groupsumall = groupsumall ./ numsubjects;
+                groupsummua = groupsummua ./ numsubjects;
+                groupsumsus = groupsumsus ./ numsubjects;
 
-                % now add the tile
+                % now add the tiles
                 nexttile
-                bar(groupsum,2,'histc')
-                title([num2str(stimList(istim)) thisUnit])
-                xlim([0 length(layersum)])
-                xticks(0:200:length(layersum))
+                bar(groupsumall,2,'histc')
+                title([num2str(stimList(istim)) thisUnit ' ALL'])
+                xlim([0 length(layersumall)])
+                xticks(0:600:length(layersumall))
                 labellist = xticks;
-                xticklabels(labellist)
+                xticklabels(labellist/3)
+
+                nexttile
+                bar(groupsummua,2,'histc')
+                title([num2str(stimList(istim)) thisUnit ' MUA'])
+                xlim([0 length(layersumall)])
+                xticks(0:600:length(layersumall))
+                labellist = xticks;
+                xticklabels(labellist/3)
+                
+                nexttile
+                bar(groupsumsus,2,'histc')
+                title([num2str(stimList(istim)) thisUnit ' SUS'])
+                xlim([0 length(layersumall)])
+                xticks(0:600:length(layersumall))
+                labellist = xticks;
+                xticklabels(labellist/3)
 
 
             end % stim
@@ -122,6 +190,8 @@ for iGro = 1:length(Groups)
         mkdir('SpikeDetection')
     end
     cd SpikeDetection
-    save([Groups{iGro} '_Normspikedetection'],'spikeT')
+    save([Groups{iGro} '_Normspikedetection_ALL'],'ALLt')
+    save([Groups{iGro} '_Normspikedetection_MUA'],'MUAt')
+    save([Groups{iGro} '_Normspikedetection_SUS'],'SUSt')
 end % group
 cd(homedir)

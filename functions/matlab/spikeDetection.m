@@ -8,16 +8,17 @@ function [trlspikerate,avgspikerate,trlspikecount,avgspikecount,...
 % of each subject
 
 % set time windows SPECIFIC to spike counting - we'll make this more
-% dynamic later
-prestim   = 300:400;
-stimonset = 400:500;
-poststim  = 600:700;
+% dynamic later maybe - pup call stim types probably need a seperate
+% version of this code so that more time windows can be set
+prestim   = 900:1200; %300:400 ms
+stimonset = 1200:1500; %400:500 ms
+poststim  = 1800:2100; %600:700 ms
 if matches(Condition,'gapASSR')
-    poststim = 2550:3000; % our single gap in noise block
+    poststim = 7650;9000; % 2550:3000 ms % our single gap in noise block
 elseif matches(Condition,'Chirp')
-    poststim = 1400:3400; % the 2 second Chirp
+    poststim = 4200:10200; % 1400:3400 ms % the 2 second Chirp
 elseif matches(Condition,'ClickTrain')
-    poststim = 1550:2000; % corresponding to zoomed in figure
+    poststim = 4650:6000; % 1550:2000 ms % corresponding to zoomed in figure
 end
 
 % preallocate the trial spike buckets

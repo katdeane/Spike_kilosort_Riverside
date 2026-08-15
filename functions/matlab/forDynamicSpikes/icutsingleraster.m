@@ -18,13 +18,13 @@ if matches(thistype, 'spont')
     % cut off end if it doesn't reach the right amount of time
     onsets = onsets(1:floor(size(SpikeMatrix,2)/stimITI));
 
-    curData = NaN(size(SpikeMatrix,1), stimITI, length(onsets));
+    curData = NaN(size(SpikeMatrix,1), stimITI+1, length(onsets));
 
     % now we can cut out the time points around onsets corresponding to
     % specific dB
     for iOn = 1:length(onsets)
 
-        curData(:,:,iOn) = SpikeMatrix(:,onsets(iOn):onsets(iOn)+stimITI-1);
+        curData(:,:,iOn) = SpikeMatrix(:,onsets(iOn):onsets(iOn)+stimITI);
 
     end
 
@@ -35,7 +35,7 @@ if matches(thistype, 'spont')
 elseif matches(thistype, 'single')
 
     if isempty(SpikeMatrix) % for example, no single units detected - generate the correct size empty bucket
-        DataOut{1} = zeros(size(SpikeMatrix,1),stimITI+BL,0);
+        DataOut{1} = zeros(size(SpikeMatrix,1),stimITI+BL+1,0);
     else
 
         threshold = 0.9; %microvolts, constant input of at least 0.1 through analog channel from RZ6 to XDAC
