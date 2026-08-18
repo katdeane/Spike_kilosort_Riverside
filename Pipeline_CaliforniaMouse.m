@@ -30,13 +30,25 @@ Condition = {'NoiseBurst' 'Pupcall30' 'Spontaneous'  ...
     'ClickTrain' 'gapASSR' 'Chirp' 'PostNoiseBurst'}; 
 
 
-%% Data generation per subject ⊂◉‿◉つ
+%% this REASSIGNS KSlabel (mua/good) based on correlogram check
+
+% it currently actually doesn't do anything
+CorrelogramCheck(homedir, Groups, Condition)
+
+%% LAYERS
+% Data generation across layers ⊂◉‿◉つ
 
 DynamicSpikes(homedir, figfold, Groups, Condition,'Anesthetized')
 
+% Group Layer pics 
+% this also used the spikeDetection.m script to pull data for stats
+Group_Avg_raster(homedir, figfold, outfold, Groups, Condition,'Anesthetized')
 
+%% Individual IDs
+% Run each spike ID, adding it to the data structure per subject
+DynamicSpikes_byID(homedir, figfold, Groups, Condition,'Anesthetized')
 
-% % code snippet to eventually plot spike templates
-% % load the data container in with the templates 
-% unit1 = squeeze(templates(1,:,:));
-% thischan = find(max(rms(unit1,1))==rms(unit1,1));
+% to do:
+% use the spikeDetection.m script to pull data for stats, add column to
+% output for label (mua/good)
+% NewFunction(homedir, figfold, outfold, Groups, Condition,'Anesthetized')

@@ -45,7 +45,7 @@ Condition = {'NoiseBurst' 'Spontaneous' 'ClickTrain' 'Chirp' ...
 DynamicSpikes(homedir, figfold, Groups, Condition,'Awake')
 
 
-%% Group pics
-
+%% Group Layer pics 
+% this also used the spikeDetection.m script to pull data for stats
 Group_Avg_raster(homedir, figfold, outfold, Groups, Condition,'Awake')
 
