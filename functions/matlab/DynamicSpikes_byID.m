@@ -72,7 +72,7 @@ for iGro = 1:length(Group)
                     cd(allegofile)
 
                     % load data in %
-                    clear spikes
+                    % clear spikes
                     templates  = double(readNPY('templates.npy')); % pull the kilo spike template data
                     locations  = double(readNPY('spike_positions.npy')); % location of spike in microns
                     timestamps = double(readNPY('spike_times.npy')); % time of spike peak in fs=30k
@@ -199,8 +199,9 @@ for iGro = 1:length(Group)
 
                         % individual spike ID data (follows the same
                         % indexing as the DynamicSpikes.m function)
-                        SpikeData(CondIDX).(['ID' num2str(IDlist(iID)) '_list'])   = sngtrlSpikes;
+                        % SpikeData(CondIDX).(['ID' num2str(IDlist(iID)) '_list']) = spikes; this makes the data way too big, matlab is unable to contain the memory to hold it if there are enough spikes
                         SpikeData(CondIDX).(['ID' num2str(IDlist(iID)) '_raster']) = sngtrlSpikes;
+                        clear spikes sngtrlSpikes
                     end
                 else
                     disp([subname ' ' Condition{iStimType} ' allego data missing: ' allegofile])
