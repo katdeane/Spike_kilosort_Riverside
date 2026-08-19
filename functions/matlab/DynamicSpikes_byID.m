@@ -12,6 +12,9 @@ if ~exist('homedir','var')
     print('Do better.')
 end
 
+% run this to avoid saving things in scientific notation
+format longG
+
 for iGro = 1:length(Group)
 
     run([Group{iGro} '.m']); % brings animals channels Cond Condition Layer
@@ -99,13 +102,24 @@ for iGro = 1:length(Group)
                     % add lfp data (fs=1000) just for stimulus channel
                     stimIn = FileReaderStimChan(datafile);
 
-                    IDlist = unique(spike_ID);
+                    IDlist = unique(spikes(:,1)); % only look at spikes kept after cortical layer size determined
                     % loop through spike IDs
                     for iID = 1:length(IDlist)
 
                         thisspike = spikes(spikes(:,1)==IDlist(iID),:);
                         % organize spikes into full length raster
                         [spikeMatrix] = irasterdata(thisspike,Ld);
+
+                        % spikeMatrix is currently as long as it's last
+                        % spike timestamp. However, onsets may exist beyond
+                        % that, which will throw an error below. We'll padd
+                        % the end with zeros up to the size of the stimIn
+                        % variable (updated from fs=1000 to fs=3000)
+                        if size(spikeMatrix,2) < (size(stimIn,2)*3)
+                            padlength = (size(stimIn,2)*3) - size(spikeMatrix,2);
+                            padheight = size(spikeMatrix,1);
+                            spikeMatrix = [spikeMatrix zeros(padheight,padlength)];
+                        end
 
                         % baseline is 400 ms
                         BL      = 400;
@@ -174,7 +188,7 @@ for iGro = 1:length(Group)
                         plot(thistemplate(:,bestchan))
                         title(['Spike Template; chan ' num2str(bestchan)])
                         xticks(0:20:60)
-                        xticklabels(xticks/20)
+                        xticklabels(round(xticks/30,2))
 
                         h = gcf;
                         thislocation = num2str(round(mean(thisspike(:,3))));
