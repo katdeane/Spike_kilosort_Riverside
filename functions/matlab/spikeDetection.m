@@ -3,6 +3,8 @@ function [trlspikerate,avgspikerate,trlspikecount,avgspikecount,...
     avgPOSTcount,Fanofactor,FanoPRE,FanoONSET,FanoPOST] = ...
     spikeDetection(thisdat,Condition)
 
+% sampling rate 
+sampleRate = 3000;
 % this function gets the spike rate and spike counts across full trials and
 % trial averages, as well as spike counts across ROIs and the fano factor
 % of each subject
@@ -32,7 +34,7 @@ for itrl = 1:length(trlspikerate)
     % spike count, full time window
     trlspikecount(:,itrl) = sum(thisdat(:,:,itrl),2);
     % spike rate per second (time axis in ms)
-    trlspikerate(:,itrl)  = trlspikecount(:,itrl) / ((size(thisdat,2))/1000);
+    trlspikerate(:,itrl)  = trlspikecount(:,itrl) / ((size(thisdat,2))/sampleRate);
     % spike count 100 ms of pre-stimulus activity
     trlPREcount(:,itrl)   = sum(thisdat(:,prestim,itrl),2);
     % spike count 100 ms from onset

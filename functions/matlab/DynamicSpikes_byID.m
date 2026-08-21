@@ -12,7 +12,8 @@ if ~exist('homedir','var')
     print('Do better.')
 end
 
-% run this to avoid saving things in scientific notation
+% run this to avoid saving things in scientific notation -loop through
+% groups
 format longG
 
 for iGro = 1:length(Group)
@@ -99,13 +100,45 @@ for iGro = 1:length(Group)
                     % sanity check; plot all spikes in continuous data:
                     % plot(spikes(:,2),spikes(:,3),'.')
 
+                   % Load kilosort cluster labels
+                    Labels = readtable( ...
+                        "cluster_KSLabel.tsv", ...
+                        "FileType", "text", ...
+                        "Delimiter", "\t");
+
+                    % Make sure cluster_id is numeric
+                    if ~isnumeric(Labels.cluster_id)
+                        Labels.cluster_id = str2double( ...
+                            string(Labels.cluster_id));
+                    end
+
                     % add lfp data (fs=1000) just for stimulus channel
                     stimIn = FileReaderStimChan(datafile);
 
                     IDlist = unique(spikes(:,1)); % only look at spikes kept after cortical layer size determined
+                    disp(['Found ' num2str(length(IDlist)) ... % get actual cluster ids
+                        ' Kilosort clusters in ' subname])
+
                     % loop through spike IDs
                     for iID = 1:length(IDlist)
+                    thisID = IDlist(iID); % actual kilosort cluster ID
+                   % Get kilosort label
+                    labelIndex = Labels.cluster_id == thisID;
 
+                    if any(labelIndex)
+
+                        thisLabel = Labels.KSLabel{labelIndex};
+
+                    else
+
+                        thisLabel = 'unknown';
+
+                        warning(['Cluster ID ' num2str(thisID) ...
+                            ' was not found in cluster_KSLabel.tsv'])
+
+                    end
+
+                        % get spikes in cluster 
                         thisspike = spikes(spikes(:,1)==IDlist(iID),:);
                         % organize spikes into full length raster
                         [spikeMatrix] = irasterdata(thisspike,Ld);
@@ -154,11 +187,37 @@ for iGro = 1:length(Group)
 
                         % psth figures per stimulus, if multiple
                         PSTHfig = tiledlayout('flow');
-                        title(PSTHfig,[subname ' ' Condition{iStimType} ' PSTH Spike ID ' num2str(IDlist(iID))])
+                        title(PSTHfig, ...
+                            [subname ' ' ...
+                            Condition{iStimType} ...
+                            ' PSTH Spike ID ' num2str(thisID) ...
+                            ' (' thisLabel ')']);
                         xlabel(PSTHfig, 'time [ms]')
-                        ylabel(PSTHfig, 'spike count / spike rate [s]')
+                        ylabel(PSTHfig, 'firing rate [Hz]')
+
+                        %containers for spikeDetection output
+
+                        ClusterPSTH = cell(1,length(stimList)); 
+                        ClusterSpikeDetection = struct; 
 
                         for istim = 1:length(stimList)
+
+                            thisRaster = singltrlSpikes{istim}; %individual spike raster
+
+                            if isempty(thisRaster) 
+                                ClusterPSTH{istim} = []; 
+                                nextile 
+                                title([num2str(stimList(istim)) thisUnit '-no data'])
+
+                                continue
+
+                            end 
+
+                            %Avg across trials 
+                            clusterPSTH = mean(thisRaster, 3); 
+                            clusterPSTH = clusterPSTH * sampleRate; %convert to Hz
+                            clusterPSTH = squeeze(clusterPSTH); 
+                            ClusterPSTH{istim} = clusterPSTH; 
 
                             % figure of psth's for all and layers per stim
                             trlsum   = sum(sngtrlSpikes{istim},3);
@@ -171,24 +230,71 @@ for iGro = 1:length(Group)
 
                             % now add the tile
                             nexttile
-                            bar(adjlaysum,30,'histc')
+                            bar(clusterPSTH,30,'histc')
                             title([num2str(stimList(istim)) thisUnit])
                             xlim([0 length(chansum)])
-                            xticks(0:600:length(chansum))
-                            xticklabels(xticks/3)
+                            xticks(0:600:length(clusterPSTH))
+                            xticklabels(xticks/3);
 
-                        end
+                            %spike detection 
 
-                        % template 
-                        thistemplate = squeeze(templates(iID,:,:)); % assuming spikes are listed in order from 0, which is how the IDlist is automatically ordered from 'unique'
+                            [ ...
+                                trlspikerate, ...
+                                avgspikerate, ...
+                                trlspikecount, ...
+                                avgspikecount, ...
+                                trlPREcount, ...
+                                trlONSETcount, ...
+                                trlPOSTcount, ...
+                                avgPREcount, ...
+                                avgONSETcount, ...
+                                avgPOSTcount, ...
+                                Fanofactor, ...
+                                FanoPRE, ...
+                                FanoONSET, ...
+                                FanoPOST] = ...
+                                spikeDetection( ...
+                                thisRaster, ...
+                                Condition{iStimType});
+
+                            % save spike detection results
+                            ClusterSpikeDetection.(thisLabel).(num2str(stimList(istim))) = ...
+                                struct('trlspikerate', trlspikerate, ...
+                                'avgspikerate', avgspikerate, ...
+                                'trlspikecount', trlspikecount, ...
+                                'avgspikecount', avgspikecount, ...
+                                'trlPREcount', trlPREcount, ...
+                                'trlONSETcount', trlONSETcount, ...
+                                'trlPOSTcount', trlPOSTcount, ...
+                                'avgPREcount', avgPREcount, ...
+                                'avgONSETcount', avgONSETcount, ...
+                                'avgPOSTcount', avgPOSTcount, ...
+                                'Fanofactor', Fanofactor, ...
+                                'FanoPRE', FanoPRE, ...
+                                'FanoONSET', FanoONSET, ...
+                                'FanoPOST', FanoPOST);
+                           
+                        end % stim
+
+                        % template
+                        if thisID >= 1 && thisID <= size(templates,1)
+
+                        thistemplate = squeeze(templates(thisID,:,:)); % assuming spikes are listed in order from 0, which is how the IDlist is automatically ordered from 'unique'
                         % get just the highest rms channel for plotting
-                        bestchan     = find(max(rms(thistemplate,1))==rms(thistemplate,1));
+                             if ~isempty(thistemplate) 
+                             channelRMS = rms(thistemplate,1); 
+                             [~,bestchan] =  max(channelRMS);
                         
-                        nexttile
-                        plot(thistemplate(:,bestchan))
-                        title(['Spike Template; chan ' num2str(bestchan)])
-                        xticks(0:20:60)
-                        xticklabels(round(xticks/30,2))
+                           nexttile
+                              plot(thistemplate(:,bestchan))
+                              title(['Spike Template' num2str(thisID)...
+                             'Template; chan'...
+                              num2str(bestchan)]);
+                             xticks(0:20:60)
+                             xticklabels(round(xticks/30,2))
+                             end 
+                        end
+                        
 
                         h = gcf;
                         thislocation = num2str(round(mean(thisspike(:,3))));

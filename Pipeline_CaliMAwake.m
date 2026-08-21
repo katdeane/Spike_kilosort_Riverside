@@ -38,3 +38,16 @@ Condition = {'NoiseBurst' 'ShortCall' 'Spontaneous' 'MaskCall'  ...
 % per subject CSD Script
 DynamicSpikes(homedir, figfold, Groups, Condition,'Awake')
 
+% Group Layer pics 
+% this also used the spikeDetection.m script to pull data for stats
+Group_Avg_raster(homedir, figfold, outfold, Groups, Condition,'Awake')
+
+%% Individual IDs
+% Run each spike ID, adding it to the data structure per subject
+DynamicSpikes_byID(homedir, figfold, Groups, Condition,'Awake')
+
+% to do:
+% use the spikeDetection.m script to pull data for stats, add column to
+% output for label (mua/good)
+% NewFunction(homedir, figfold, outfold, Groups, Condition,'Anesthetized')
+
