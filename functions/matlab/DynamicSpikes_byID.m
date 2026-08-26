@@ -119,24 +119,21 @@ for iGro = 1:length(Group)
                     disp(['Found ' num2str(length(IDlist)) ... % get actual cluster ids
                         ' Kilosort clusters in ' subname])
 
-                    % loop through spike IDs
+                    
+                    goodIDs = Labels.cluster_id( ...
+                        matches(string(Labels.KSLabel),'good')); %get IDs labeled "good"
+
+                   
+                    IDlist = IDlist(ismember(IDlist,goodIDs));  %keep only good clusters that are in data
+
+                    disp(['Found ' num2str(length(IDlist)) ...
+                        ' GOOD Kilosort clusters in ' subname])
+
+                   
                     for iID = 1:length(IDlist)
-                    thisID = IDlist(iID); % actual kilosort cluster ID
-                   % Get kilosort label
-                    labelIndex = Labels.cluster_id == thisID;
 
-                    if any(labelIndex)
-
-                        thisLabel = Labels.KSLabel{labelIndex};
-
-                    else
-
-                        thisLabel = 'unknown';
-
-                        warning(['Cluster ID ' num2str(thisID) ...
-                            ' was not found in cluster_KSLabel.tsv'])
-
-                    end
+                        thisID = IDlist(iID);
+                        thisLabel = 'good';  %loop through good spike IDs
 
                         % get spikes in cluster 
                         thisspike = spikes(spikes(:,1)==IDlist(iID),:);
@@ -202,31 +199,29 @@ for iGro = 1:length(Group)
 
                         for istim = 1:length(stimList)
 
-                            thisRaster = singltrlSpikes{istim}; %individual spike raster
+                            thisRaster =  sngtrlSpikes{istim}; %individual spike raster
 
                             if isempty(thisRaster) 
                                 ClusterPSTH{istim} = []; 
-                                nextile 
-                                title([num2str(stimList(istim)) thisUnit '-no data'])
 
                                 continue
 
                             end 
+                         %sum across trials
+                           trlsum = sum(thisRaster,3);
 
-                            %Avg across trials 
-                            clusterPSTH = mean(thisRaster, 3); 
-                            clusterPSTH = clusterPSTH * sampleRate; %convert to Hz
-                            clusterPSTH = squeeze(clusterPSTH); 
-                            ClusterPSTH{istim} = clusterPSTH; 
+                         %sum across channels
+                           chansum = sum(trlsum,1);
 
-                            % figure of psth's for all and layers per stim
-                            trlsum   = sum(sngtrlSpikes{istim},3);
-                            chansum  = sum(trlsum,1);
-                            
-                            % get spiking rate per second
+                         %get spiking rate per second
                             spikerate = sum(chansum) / ((length(chansum))/1000);
-                            %adjust your raster by spiking rate
-                            adjlaysum = chansum ./ spikerate;
+
+                         %normalize PSTH by overall spike rate
+                            clusterPSTH = chansum ./ spikerate;
+
+                          %store PSTH
+                            ClusterPSTH{istim} = clusterPSTH;
+                            
 
                             % now add the tile
                             nexttile
@@ -257,22 +252,23 @@ for iGro = 1:length(Group)
                                 thisRaster, ...
                                 Condition{iStimType});
 
-                            % save spike detection results
-                            ClusterSpikeDetection.(thisLabel).(num2str(stimList(istim))) = ...
-                                struct('trlspikerate', trlspikerate, ...
-                                'avgspikerate', avgspikerate, ...
-                                'trlspikecount', trlspikecount, ...
-                                'avgspikecount', avgspikecount, ...
-                                'trlPREcount', trlPREcount, ...
-                                'trlONSETcount', trlONSETcount, ...
-                                'trlPOSTcount', trlPOSTcount, ...
-                                'avgPREcount', avgPREcount, ...
-                                'avgONSETcount', avgONSETcount, ...
-                                'avgPOSTcount', avgPOSTcount, ...
-                                'Fanofactor', Fanofactor, ...
-                                'FanoPRE', FanoPRE, ...
-                                'FanoONSET', FanoONSET, ...
-                                'FanoPOST', FanoPOST);
+                            ClusterSpikeDetection.(thisLabel).( ...
+                                ['Stim_' num2str(stimList(istim))]) = ...
+                                struct( ...
+                                'trlspikerate',trlspikerate, ...
+                                'avgspikerate',avgspikerate, ...
+                                'trlspikecount',trlspikecount, ...
+                                'avgspikecount',avgspikecount, ...
+                                'trlPREcount',trlPREcount, ...
+                                'trlONSETcount',trlONSETcount, ...
+                                'trlPOSTcount',trlPOSTcount, ...
+                                'avgPREcount',avgPREcount, ...
+                                'avgONSETcount',avgONSETcount, ...
+                                'avgPOSTcount',avgPOSTcount, ...
+                                'Fanofactor',Fanofactor, ...
+                                'FanoPRE',FanoPRE, ...
+                                'FanoONSET',FanoONSET, ...
+                                'FanoPOST',FanoPOST); 
                            
                         end % stim
 
@@ -306,8 +302,11 @@ for iGro = 1:length(Group)
                         % individual spike ID data (follows the same
                         % indexing as the DynamicSpikes.m function)
                         % SpikeData(CondIDX).(['ID' num2str(IDlist(iID)) '_list']) = spikes; this makes the data way too big, matlab is unable to contain the memory to hold it if there are enough spikes
+                        SpikeData(CondIDX).(['ID' num2str(thisID) '_label']) = thisLabel;
                         SpikeData(CondIDX).(['ID' num2str(IDlist(iID)) '_raster']) = sngtrlSpikes;
-                        clear spikes sngtrlSpikes
+                        SpikeData(CondIDX).(['ID' num2str(thisID) '_PSTH']) = ClusterPSTH;
+                        SpikeData(CondIDX).(['ID' num2str(thisID) '_SpikeDetection']) = ClusterSpikeDetection;
+                        clear thisspike sngtrlSpikes ClusterPSTH ClusterSpikeDetection
                     end
                 else
                     disp([subname ' ' Condition{iStimType} ' allego data missing: ' allegofile])
