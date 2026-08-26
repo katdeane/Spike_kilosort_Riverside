@@ -59,7 +59,7 @@ for ibin in FileList:
 
     ops, st, clu, tF, Wall, similar_templates, is_ref, est_contam_rate, kept_spikes = \
         run_kilosort(
-            settings=settings, probe_name='C:\\kilosort\\probe.json'
-            # save_preprocessed_copy=True
+            settings=settings, probe_name='C:\\kilosort\\probe.json',
+            save_preprocessed_copy=True
             )
     
