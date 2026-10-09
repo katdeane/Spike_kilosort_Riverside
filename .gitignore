@@ -15,6 +15,7 @@
 *.log
 *.pkl
 *.asv
+*.dat
 
 \.phy
 \figures
