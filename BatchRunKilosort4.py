@@ -28,6 +28,7 @@ from os.path import isfile, join, isdir
 from kilosort import run_kilosort
 from PyQt5.QtWidgets import QApplication, QFileDialog 
 import sys
+import traceback
 
 # set the operating directory 
 if os.path.isdir("E:\\Spike_kilosort_Riverside"):
@@ -64,16 +65,24 @@ if not FolderList:
 
     # now loop through files to process
     for ibin in FileList:
-        filepath = path + '\\' + ibin
-        resultpath = path + '\\' + ibin[0:-9] # cutting off '_bulk.bin'
+        filepath = os.path.join(path, ibin)
+        resultpath = os.path.join(path, ibin[0:-9]) # cutting off '_bulk.bin'
     
-        settings = {'filename': filepath, 'n_chan_bin': 32, 'results_dir': resultpath}
-    
-        ops, st, clu, tF, Wall, similar_templates, is_ref, est_contam_rate, kept_spikes = \
-            run_kilosort(
-                settings=settings, probe_name='C:\\kilosort\\probe.json',
-                save_preprocessed_copy=True
-                )
+        # kilosort won't complete if there aren't enough samples, but we want it to just run through what it can
+        try:
+            settings = {'filename': filepath, 'n_chan_bin': 32, 'results_dir': resultpath}
+        
+            ops, st, clu, tF, Wall, similar_templates, is_ref, est_contam_rate, kept_spikes = \
+                run_kilosort(
+                    settings=settings, probe_name='C:\\kilosort\\probe.json',
+                    save_preprocessed_copy=True
+                    )
+        # so if it fails, we'll leave a message behind about it
+        except Exception:
+            tracetext = traceback.format_exc()
+            filename = os.path.join(resultpath, "error.txt")
+            with open(filename, "w") as f:
+                f.write(tracetext)
 else:
     # _kilo folders detected, run through all of them
     for idir in FolderList:
@@ -89,16 +98,24 @@ else:
 
         # now loop through files to process
         for ibin in FileList:
-            filepath = deeppath + '\\' + ibin
-            resultpath = deeppath + '\\' + ibin[0:-9] # cutting off '_bulk.bin'
+            filepath = os.path.join(deeppath, ibin)
+            resultpath = os.path.join(deeppath, ibin[0:-9]) # cutting off '_bulk.bin'
         
-            settings = {'filename': filepath, 'n_chan_bin': 32, 'results_dir': resultpath}
-        
-            ops, st, clu, tF, Wall, similar_templates, is_ref, est_contam_rate, kept_spikes = \
-                run_kilosort(
-                    settings=settings, probe_name='C:\\kilosort\\probe.json',
-                    save_preprocessed_copy=True
-                    )
+            # kilosort won't complete if there aren't enough samples, but we want it to just run through what it can
+            try:
+                settings = {'filename': filepath, 'n_chan_bin': 32, 'results_dir': resultpath}
+            
+                ops, st, clu, tF, Wall, similar_templates, is_ref, est_contam_rate, kept_spikes = \
+                    run_kilosort(
+                        settings=settings, probe_name='C:\\kilosort\\probe.json',
+                        save_preprocessed_copy=True
+                        )
+            # so if it fails, we'll leave a message behind about it
+            except Exception:
+                tracetext = traceback.format_exc()
+                filename = os.path.join(resultpath, "error.txt")
+                with open(filename, "w") as f:
+                    f.write(tracetext)
     
     
     
