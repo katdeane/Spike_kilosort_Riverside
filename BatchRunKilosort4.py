@@ -14,7 +14,7 @@ Created on Sat May 16 15:40:00 2026
          🗸 wrap the current forloop in a larger one to loop through subject folders
          🗸 create a condition to skip broader loop and just perform the kilosort loop once
          
-     - We need to either force output for small cluster sizes or get the loop to skip those.
+     🗸 We need to either force output for small cluster sizes or get the loop to skip those.
        This is tricky though because it might mean messing with kilosort code
        Or maybe we can use "try" and "exception" inside of the forloop - if kilosort
        breaks, the exception will be just to continue to the next iteration of the loop. 

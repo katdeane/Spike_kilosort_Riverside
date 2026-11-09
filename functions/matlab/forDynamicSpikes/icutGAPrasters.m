@@ -21,19 +21,19 @@ end
 % this means if throwoutfirst == 1, the first onset is second stim
 crossover = diff(location);
 onsets = find(crossover == 1);
-onsets = onsets*3; % convert to fs 3k
+onsets = onsets; % convert to fs 3k
 
 % the first stim is marked by a down peak around 300 ms after onset. It's
 % very consistent but the resting channel value is variable. We have then a
 % dynamic lower threshold to check for the down peak after the stim onset
 % time
 
-plot(stimIn(1:9000));
-ylim([-0.1 0.1])
+plot(stimIn(1:20000));
+ylim([-2 2])
 xline(onsets(1))
-if (onsets(1)-3770) > 0
+if (onsets(1)-(3770)) > 0
 
-    firstsuspect = onsets(1)-3770;
+    firstsuspect = onsets(1)-(3770);
 
     % take the mean and std of the 40 seconds around the stim 
     meansus = mean(stimIn(firstsuspect-20:firstsuspect+20));
@@ -58,6 +58,7 @@ end
 %% timing info
 
 % stim duration + ITI (ms)
+onsets = onsets*3;
 stimITI = stimdur+ITI; % ms
 stimITI = stimITI*3; % μs
 BL = BL*3; % μs
@@ -83,15 +84,9 @@ end
 shortlist = unique(stimList);
 shortlist = shortlist(shortlist ~= 0);
 
-% click list is of duration between clicks so 8.33 = 120 Hz
-% we want 1 hz (1000) first:
-if matches(thistype, 'ClickRate')
-    shortlist =  sort(shortlist,"descend");
-end
 
 % this should match or something is wrong
 if length(shortlist) ~= length(checkStimList); error('stimlist doesnt match'); end
-
 
 % this is an issue for gapASSR where I have to manually stop the stimuli
 % and I sometimes miss that it's finished until a few stim later. 
@@ -103,7 +98,7 @@ end
 % RPvdsEx always skips producing the first stim, which in this case is set to 0
 % and do we also need to remove that first stim?
 if throwoutfirst == 1
-    stimList = stimList(3:length(onsets)+2);
+    stimList = stimList(3:length(onsets)+1);
 elseif throwoutfirst == 0
     stimList = stimList(2:length(onsets)+1);
 end

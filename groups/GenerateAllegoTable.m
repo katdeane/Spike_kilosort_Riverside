@@ -9,7 +9,7 @@
 % does not seem to have been collected properly, CHECK MANUALLY for this
 % case. (copy and find all 'uidmmdd-hh-mm-ss')
 
-tabsize = [100 3]; 
+tabsize = [250 3]; 
 ATab = table(Size=tabsize,VariableNames=["Subject","Measurement","AllegoName"],...
     VariableTypes=["string","string","string"]);
 
@@ -118,6 +118,148 @@ ATab(90,:) = {'VMA04','08','allego_31__uid0505-14-38-24'};
 ATab(91,:) = {'VMA04','09','allego_32__uid0505-15-02-15'};
 ATab(92,:) = {'VMA04','10','allego_33__uid0505-15-20-24'};
 
+ATab(93,:) = {'AWT01','03','allego_2__uid0530-14-38-12'};
+ATab(94,:) = {'AWT01','04','allego_3__uid0530-14-41-00'};
+ATab(95,:) = {'AWT01','05','allego_4__uid0530-14-43-21'};
+ATab(96,:) = {'AWT01','06','allego_5__uid0530-14-49-33'};
+ATab(97,:) = {'AWT01','07','allego_6__uid0530-15-06-28'};
+ATab(98,:) = {'AWT01','08','allego_7__uid0530-15-19-19'};
+
+ATab(99,:) = {'AWT02','02','allego_1__uid0531-10-52-40'};
+ATab(100,:) = {'AWT02','03','allego_2__uid0531-10-56-17'};
+ATab(101,:) = {'AWT02','04','allego_3__uid0531-10-58-29'};
+ATab(102,:) = {'AWT02','05','allego_4__uid0531-11-11-14'};
+ATab(103,:) = {'AWT02','06','allego_5__uid0531-11-17-25'};
+ATab(104,:) = {'AWT02','07','allego_6__uid0531-11-24-12'};
+ATab(105,:) = {'AWT02','08','allego_7__uid0531-11-41-07'};
+
+ATab(106,:) = {'AWT06','02','allego_0__uid0621-11-26-14'};
+ATab(107,:) = {'AWT06','03','allego_1__uid0621-11-29-40'};
+ATab(108,:) = {'AWT06','04','allego_2__uid0621-11-32-36'};
+ATab(109,:) = {'AWT06','05','allego_3__uid0621-11-39-24'};
+ATab(110,:) = {'AWT06','06','allego_0__uid0621-11-47-32'};
+ATab(111,:) = {'AWT06','07','allego_1__uid0621-12-00-26'};
+ATab(112,:) = {'AWT06','08','allego_2__uid0621-12-17-25'};
+
+ATab(113,:) = {'AWT07','02','allego_4__uid0621-12-34-05'};
+ATab(114,:) = {'AWT07','03','allego_5__uid0621-12-36-58'};
+ATab(115,:) = {'AWT07','04','allego_6__uid0621-12-39-50'};
+ATab(116,:) = {'AWT07','05','allego_7__uid0621-12-46-32'};
+ATab(117,:) = {'AWT07','06','allego_8__uid0621-13-03-39'};
+ATab(118,:) = {'AWT07','07','allego_9__uid0621-13-09-48'};
+ATab(119,:) = {'AWT07','08','allego_10__uid0621-13-23-37'};
+
+ATab(120,:) = {'AWT08','02','allego_12__uid0621-13-44-04'};
+ATab(121,:) = {'AWT08','03','allego_14__uid0621-13-48-29'};
+ATab(122,:) = {'AWT08','04','allego_15__uid0621-13-50-35'};
+ATab(123,:) = {'AWT08','05','allego_16__uid0621-14-07-42'};
+ATab(124,:) = {'AWT08','06','allego_17__uid0621-14-15-45'};
+ATab(125,:) = {'AWT08','07','allego_18__uid0621-14-30-35'};
+ATab(126,:) = {'AWT08','08','allego_19__uid0621-14-37-25'};
+
+ATab(127,:) = {'AWT13','01','allego_24__uid0906-13-13-17'};
+ATab(128,:) = {'AWT13','02','allego_25__uid0906-13-16-54'};
+ATab(129,:) = {'AWT13','03','allego_26__uid0906-13-19-26'};
+ATab(130,:) = {'AWT13','04','allego_27__uid0906-13-37-08'};
+ATab(131,:) = {'AWT13','05','allego_28__uid0906-13-50-34'};
+ATab(132,:) = {'AWT13','06','allego_29__uid0906-13-57-51'};
+ATab(133,:) = {'AWT13','07','allego_30__uid0906-14-04-15'};
+
+ATab(134,:) = {'AWT14','01','allego_31__uid0906-14-27-04'};
+ATab(135,:) = {'AWT14','02','allego_32__uid0906-14-32-17'};
+ATab(136,:) = {'AWT14','03','allego_33__uid0906-14-35-35'};
+ATab(137,:) = {'AWT14','04','allego_34__uid0906-14-42-58'};
+ATab(138,:) = {'AWT14','05','allego_35__uid0906-14-50-23'};
+ATab(139,:) = {'AWT14','06','allego_36__uid0906-15-04-31'};
+ATab(140,:) = {'AWT14','07','allego_37__uid0906-15-22-13'};
+
+ATab(141,:) = {'AWT26','04','allego_3__uid0424-10-51-47'};
+ATab(142,:) = {'AWT26','05','allego_4__uid0424-10-55-44'};
+ATab(143,:) = {'AWT26','06','allego_5__uid0424-10-58-25'};
+ATab(144,:) = {'AWT26','07','allego_6__uid0424-11-04-45'};
+ATab(145,:) = {'AWT26','08','allego_7__uid0424-11-17-46'};
+ATab(146,:) = {'AWT26','09','allego_8__uid0424-11-34-51'};
+ATab(147,:) = {'AWT26','10','allego_9__uid0424-11-41-45'};
+
+ATab(148,:) = {'AWT27','07','allego_16__uid0424-12-54-51'};
+ATab(149,:) = {'AWT27','08','allego_17__uid0424-12-59-05'};
+ATab(150,:) = {'AWT27','09','allego_18__uid0424-13-02-30'};
+ATab(151,:) = {'AWT27','10','allego_19__uid0424-13-18-16'};
+ATab(152,:) = {'AWT27','11','allego_20__uid0424-13-24-59'};
+ATab(153,:) = {'AWT27','12','allego_21__uid0424-13-31-47'};
+ATab(154,:) = {'AWT27','13','allego_22__uid0424-13-49-19'};
+
+ATab(155,:) = {'AWT28','08','allego_31__uid0424-14-43-16'};
+ATab(156,:) = {'AWT28','09','allego_32__uid0424-14-47-26'};
+ATab(157,:) = {'AWT28','10','allego_33__uid0424-14-50-24'};
+ATab(158,:) = {'AWT28','11','allego_34__uid0424-14-57-11'};
+ATab(159,:) = {'AWT28','12','allego_35__uid0424-15-14-35'};
+ATab(160,:) = {'AWT28','13','allego_36__uid0424-15-21-00'};
+ATab(161,:) = {'AWT28','14','allego_37__uid0424-15-33-47'};
+
+ATab(162,:) = {'CKH01','02','allego_1__uid0206-10-15-38'};
+ATab(163,:) = {'CKH01','03','allego_2__uid0206-10-21-19'};
+ATab(164,:) = {'CKH01','04','allego_3__uid0206-10-28-51'};
+ATab(165,:) = {'CKH01','05','allego_4__uid0206-10-46-16'};
+ATab(166,:) = {'CKH01','06','allego_5__uid0206-10-59-42'};
+ATab(167,:) = {'CKH01','07','allego_6__uid0206-11-06-10'};
+ATab(168,:) = {'CKH01','08','allego_7__uid0206-11-08-36'};
+
+ATab(169,:) = {'CKH02','02','allego_4__uid0213-09-58-17'};
+ATab(170,:) = {'CKH02','03','allego_5__uid0213-10-02-50'};
+ATab(171,:) = {'CKH02','04','allego_6__uid0213-10-05-32'};
+ATab(172,:) = {'CKH02','05','allego_7__uid0213-10-22-57'};
+ATab(173,:) = {'CKH02','06','allego_8__uid0213-10-29-14'};
+ATab(174,:) = {'CKH02','07','allego_9__uid0213-10-36-14'};
+ATab(175,:) = {'CKH02','08','allego_10__uid0213-10-49-27'};
+
+ATab(176,:) = {'CKH03','03','allego_1__uid0306-09-41-31'};
+ATab(177,:) = {'CKH03','04','allego_2__uid0306-09-46-36'};
+ATab(178,:) = {'CKH03','05','allego_3__uid0306-09-49-02'};
+ATab(179,:) = {'CKH03','06','allego_4__uid0306-10-02-25'};
+ATab(180,:) = {'CKH03','07','allego_5__uid0306-10-09-20'};
+ATab(181,:) = {'CKH03','08','allego_6__uid0306-10-15-36'};
+ATab(182,:) = {'CKH03','09','allego_7__uid0306-10-32-38'};
+
+ATab(183,:) = {'CKH05','02','allego_1__uid0620-09-23-22'};
+ATab(184,:) = {'CKH05','03','allego_2__uid0620-09-28-03'};
+ATab(185,:) = {'CKH05','04','allego_3__uid0620-09-30-54'};
+ATab(186,:) = {'CKH05','05','allego_4__uid0620-09-47-58'};
+ATab(187,:) = {'CKH05','06','allego_5__uid0620-09-54-10'};
+ATab(188,:) = {'CKH05','07','allego_6__uid0620-10-07-00'};
+ATab(189,:) = {'CKH05','08','allego_7__uid0620-10-13-45'};
+
+ATab(190,:) = {'CKH06','02','allego_1__uid0626-10-57-54'};
+ATab(191,:) = {'CKH06','03','allego_2__uid0626-11-02-39'};
+ATab(192,:) = {'CKH06','04','allego_3__uid0626-11-06-23'};
+ATab(193,:) = {'CKH06','05','allego_4__uid0626-11-13-26'};
+ATab(194,:) = {'CKH06','06','allego_5__uid0626-11-30-43'};
+ATab(195,:) = {'CKH06','07','allego_6__uid0626-11-44-11'};
+ATab(196,:) = {'CKH06','08','allego_7__uid0626-11-50-36'};
+
+ATab(197,:) = {'CKH07','08','allego_7__uid0918-09-32-37'};
+ATab(198,:) = {'CKH07','10','allego_9__uid0918-09-38-19'};
+ATab(199,:) = {'CKH07','11','allego_10__uid0918-09-40-27'};
+ATab(200,:) = {'CKH07','12','allego_0__uid0918-09-54-44'};
+ATab(201,:) = {'CKH07','13','allego_1__uid0918-10-12-11'};
+ATab(202,:) = {'CKH07','14','allego_2__uid0918-10-25-11'};
+ATab(203,:) = {'CKH07','15','allego_3__uid0918-10-32-00'};
+
+ATab(204,:) = {'CKH09','06','allego_4__uid1017-10-11-44'};
+ATab(205,:) = {'CKH09','07','allego_5__uid1017-10-15-52'};
+ATab(206,:) = {'CKH09','08','allego_6__uid1017-10-18-13'};
+ATab(207,:) = {'CKH09','09','allego_7__uid1017-10-35-17'};
+ATab(208,:) = {'CKH09','10','allego_8__uid1017-10-42-07'};
+ATab(209,:) = {'CKH09','11','allego_9__uid1017-10-55-16'};
+ATab(210,:) = {'CKH09','12','allego_10__uid1017-11-01-30'};
+
+ATab(211,:) = {'CKH10','06','allego_0__uid1031-09-58-37'};
+ATab(212,:) = {'CKH10','07','allego_1__uid1031-10-02-25'};
+ATab(213,:) = {'CKH10','08','allego_2__uid1031-10-04-33'};
+ATab(214,:) = {'CKH10','09','allego_3__uid1031-10-17-30'};
+ATab(215,:) = {'CKH10','10','allego_4__uid1031-10-24-10'};
+ATab(216,:) = {'CKH10','11','allego_5__uid1031-10-30-29'};
+ATab(217,:) = {'CKH10','12','allego_6__uid1031-10-47-21'};
 
 save('AllegoTable','ATab') % make sure this overwrites the table in the 
                             % groups folder (you could do that

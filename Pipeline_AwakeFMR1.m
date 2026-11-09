@@ -35,13 +35,14 @@ if ~exist(figfold, 'dir')
 end
 
 % set consistently needed variables
-Groups = {'AKO'};  %'AWT' 'AKO' 'CKH'
+Groups = {'AWT' 'AKO' 'CKH'};  %'AWT' 'AKO' 'CKH'
 % Condition = {'NoiseBurst'};
 Condition = {'NoiseBurst' 'Spontaneous' 'ClickTrain' 'Chirp' ...
     'gapASSR' 'postNoiseBurst'};
 
-%% this REASSIGNS KSlabel (mua/good) based on correlogram check
-
+%% Allego Lookup Table
+% run only if new rows need to be added: 
+% groups/GenerateAllegoTable.m
 
 %% LAYERS
 % Data generation across layers ⊂◉‿◉つ
@@ -57,7 +58,14 @@ Group_Avg_raster(homedir, figfold, outfold, Groups, Condition,'Awake')
 % Run each spike ID, adding it to the data structure per subject
 DynamicSpikes_byID(homedir, figfold, Groups, Condition,'Awake')
 
-% to do:
-% use the spikeDetection.m script to pull data for stats, add column to
-% output for label (mua/good)
-% NewFunction(homedir, figfold, outfold, Groups, Condition,'Anesthetized')
+%% Get spike data for comparison
+% spike mean firing rate, fano factor, spike count/rate after stim onset.
+% Subject data was already pulled from Group_Avg_raster 
+SpikeStats(homedir,figfold,outfold,'AWT','AKO')
+SpikeFigsCut(homedir,figfold,'AWT','AKO')
+
+SpikeStats(homedir,figfold,outfold,'AWT','CKH')
+SpikeFigsCut(homedir,figfold,'AWT','CKH')
+
+SpikeStats(homedir,figfold,outfold,'CKH','AKO')
+SpikeFigsCut(homedir,figfold,'CKH','AKO')

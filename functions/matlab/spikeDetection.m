@@ -30,7 +30,7 @@ trlPREcount   = trlspikerate;
 trlONSETcount = trlspikerate;
 trlPOSTcount  = trlspikerate;
 
-for itrl = 1:length(trlspikerate)
+for itrl = 1:size(trlspikerate,2)
     % spike count, full time window
     trlspikecount(:,itrl) = sum(thisdat(:,:,itrl),2);
     % spike rate per second (time axis in ms)
@@ -43,14 +43,14 @@ for itrl = 1:length(trlspikerate)
     trlPOSTcount(:,itrl)  = sum(thisdat(:,poststim,itrl),2);
 end
 
-avgspikerate  = mean(trlspikerate,2);
-avgspikecount = mean(trlspikecount,2);
-avgPREcount   = mean(trlPREcount,2);
-avgONSETcount = mean(trlONSETcount,2);
-avgPOSTcount  = mean(trlPOSTcount,2);
+avgspikerate  = nanmean(trlspikerate,2);
+avgspikecount = nanmean(trlspikecount,2);
+avgPREcount   = nanmean(trlPREcount,2);
+avgONSETcount = nanmean(trlONSETcount,2);
+avgPOSTcount  = nanmean(trlPOSTcount,2);
 
-Fanofactor = (std(trlspikecount,0,2).^2)    ./avgspikecount;
-FanoPRE    = (std(trlPREcount,0,2).^2)      ./avgPREcount;
-FanoONSET  = (std(trlONSETcount,0,2).^2)    ./avgONSETcount;
-FanoPOST   = (std(trlPOSTcount,0,2).^2)     ./avgPOSTcount;
+Fanofactor = (nanstd(trlspikecount,0,2).^2)    ./avgspikecount;
+FanoPRE    = (nanstd(trlPREcount,0,2).^2)      ./avgPREcount;
+FanoONSET  = (nanstd(trlONSETcount,0,2).^2)    ./avgONSETcount;
+FanoPOST   = (nanstd(trlPOSTcount,0,2).^2)     ./avgPOSTcount;
  
